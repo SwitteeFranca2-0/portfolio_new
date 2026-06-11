@@ -1,0 +1,113 @@
+.gallery { margin-bottom: 2.5rem; }
+
+/* ── Main viewer ── */
+.main {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: #0a0a0f;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+.main:hover .image { transform: scale(1.02); }
+
+.video {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Nav arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(6, 6, 8, .7);
+  border: 1px solid var(--rule);
+  color: var(--fg);
+  font-size: 1.8rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background .2s, border-color .2s, color .2s;
+  line-height: 1;
+}
+.arrow:hover { background: rgba(62,207,207,.15); border-color: var(--acc3); color: var(--acc3); }
+.arrowLeft  { left: 1rem; }
+.arrowRight { right: 1rem; }
+
+/* Counter */
+.counter {
+  position: absolute;
+  bottom: .75rem;
+  right: 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .1em;
+  color: rgba(240,238,248,.5);
+  background: rgba(6,6,8,.6);
+  padding: .2rem .6rem;
+}
+
+/* ── Caption ── */
+.caption {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: .08em;
+  color: var(--mid);
+  margin-top: .75rem;
+  padding-left: .25rem;
+}
+
+/* ── Thumbnail strip ── */
+.thumbs {
+  display: flex;
+  gap: .75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.thumb {
+  position: relative;
+  width: 120px;
+  height: 72px;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: #0a0a0f;
+  padding: 0;
+  transition: border-color .2s;
+}
+.thumb:hover { border-color: rgba(62,207,207,.4); }
+.thumbActive { border-color: var(--acc3) !important; }
+
+.thumbImg { object-fit: cover; }
+
+.thumbVideo {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(123,94,167,.4), rgba(62,207,207,.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.playIcon {
+  font-size: 1.2rem;
+  color: var(--acc3);
+  opacity: .8;
+}
+
+@media (max-width: 600px) {
+  .thumb { width: 80px; height: 48px; }
+}
