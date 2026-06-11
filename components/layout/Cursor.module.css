@@ -1,0 +1,22 @@
+.cur, .curR {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cur {
+  width: 10px;
+  height: 10px;
+  background: var(--acc3);
+  transition: transform .15s, width .2s, height .2s;
+}
+
+.curR {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--acc3);
+  opacity: .35;
+  transition: left .06s, top .06s;
+}

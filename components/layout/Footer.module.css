@@ -1,0 +1,29 @@
+.footer {
+  background: var(--bg);
+  border-top: 1px solid var(--rule);
+  padding: 2rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer p {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  color: var(--mid);
+  letter-spacing: .08em;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--acc3);
+  display: inline-block;
+  margin-right: .5rem;
+  animation: pulse 2s infinite;
+}
+
+@media (max-width: 900px) {
+  .footer { flex-direction: column; gap: .5rem; text-align: center; }
+}

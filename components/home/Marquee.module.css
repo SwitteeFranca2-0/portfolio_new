@@ -1,0 +1,35 @@
+.wrap {
+  overflow: hidden;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: .9rem 0;
+  background: rgba(123, 94, 167, .18);
+}
+
+.track {
+  display: flex;
+  gap: 3rem;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+
+.item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: .1em;
+  color: var(--mid);
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.item span {
+  color: var(--acc3);
+  font-size: .7rem;
+  font-family: 'DM Mono', monospace;
+}
+
+@media (max-width: 640px) {
+  .item { font-size: .9rem; gap: 1.5rem; }
+  .track { gap: 1.5rem; }
+}

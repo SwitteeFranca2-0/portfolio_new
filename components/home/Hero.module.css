@@ -1,0 +1,250 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5rem;
+  z-index: 10;
+  gap: 4rem;
+}
+
+/* ── Left column ── */
+.left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  max-width: 600px;
+}
+
+.tag {
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--acc3);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  opacity: 0;
+  animation: fadeUp .8s .3s forwards;
+}
+.tag::before {
+  content: '';
+  width: 2rem;
+  height: 1px;
+  background: var(--acc3);
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4.5rem, 10vw, 12rem);
+  line-height: .9;
+  letter-spacing: .02em;
+  color: var(--fg);
+  opacity: 0;
+  animation: fadeUp .9s .5s forwards;
+}
+.colored { color: var(--acc3); }
+
+.sub {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--mid);
+  max-width: 480px;
+  line-height: 1.7;
+  margin-top: 1.5rem;
+  opacity: 0;
+  animation: fadeUp .8s .7s forwards;
+  pointer-events: all;
+}
+
+/* ── Tech badges ── */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: 1.25rem;
+  opacity: 0;
+  animation: fadeUp .8s .85s forwards;
+  pointer-events: all;
+}
+
+.badge {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--acc3);
+  border: 1px solid rgba(62, 207, 207, .35);
+  padding: .35rem .9rem;
+  background: rgba(62, 207, 207, .06);
+  transition: background .2s, border-color .2s;
+}
+.badge:hover {
+  background: rgba(62, 207, 207, .12);
+  border-color: var(--acc3);
+}
+
+/* ── CTA buttons ── */
+.actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  opacity: 0;
+  animation: fadeUp .8s 1s forwards;
+  pointer-events: all;
+}
+
+.btnGlow {
+  font-family: 'DM Mono', monospace;
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  background: var(--acc3);
+  color: var(--bg);
+  padding: .9rem 2rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: box-shadow .3s, transform .2s;
+}
+.btnGlow:hover { box-shadow: 0 0 30px rgba(62,207,207,.5); transform: translateY(-2px); }
+
+.btnGhost {
+  font-family: 'DM Mono', monospace;
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg);
+  text-decoration: none;
+  border: 1px solid var(--rule);
+  padding: .9rem 2rem;
+  transition: border-color .2s, color .2s;
+}
+.btnGhost:hover { border-color: var(--acc3); color: var(--acc3); }
+
+/* ── Right column: photo ── */
+.right {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeUp .9s .6s forwards;
+}
+
+.photoWrap {
+  position: relative;
+  width: 320px;
+  height: 380px;
+}
+
+/* Real photo (from admin) */
+.photo {
+  clip-path: polygon(0 0, 92% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
+  filter: saturate(.9) brightness(.95);
+}
+
+/* Placeholder — replaced by <img> once admin provides photo */
+.photoPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(123,94,167,.6) 0%, rgba(62,207,207,.35) 100%);
+  border: 1px solid rgba(62, 207, 207, .5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(0 0, 92% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
+}
+
+.initials {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem;
+  letter-spacing: .1em;
+  color: rgba(62, 207, 207, .85);
+  user-select: none;
+}
+
+/* Teal glow behind the photo */
+.photoGlow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse at center, rgba(62,207,207,.25) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ── Scroll hint ── */
+.scrollHint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--mid);
+  animation: bounce 2.5s infinite;
+  z-index: 10;
+}
+.scrollHint::after {
+  content: '';
+  width: 1px;
+  height: 3rem;
+  background: linear-gradient(to bottom, var(--mid), transparent);
+}
+
+/* ── Keyframes (defined locally so Turbopack CSS Modules can resolve them) ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .content {
+    flex-direction: column-reverse;
+    justify-content: center;
+    padding: 6rem 1.5rem 2rem;
+    gap: 2rem;
+    text-align: center;
+  }
+  .left { max-width: 100%; align-items: center; }
+  .tag { justify-content: center; }
+  .title { font-size: clamp(4rem, 18vw, 7rem); }
+  .badges { justify-content: center; }
+  .actions { justify-content: center; }
+  .photoWrap { width: 180px; height: 220px; }
+  .initials { font-size: 3rem; }
+}
+
+@media (max-width: 640px) {
+  .content { padding: 5rem 1.25rem 2rem; gap: 1.5rem; }
+  .title { font-size: clamp(3.5rem, 16vw, 6rem); }
+  .sub { font-size: .9rem; }
+  .badges { gap: .35rem; }
+  .badge { font-size: .55rem; padding: .25rem .65rem; }
+  .actions { gap: 1rem; flex-wrap: wrap; }
+  .btnGlow, .btnGhost { padding: .75rem 1.5rem; font-size: .65rem; }
+  .photoWrap { width: 140px; height: 170px; }
+  .initials { font-size: 2.5rem; }
+}
