@@ -1,0 +1,14 @@
+.chip {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .07em;
+  padding: .3rem .75rem;
+  border: 1px solid var(--rule);
+  color: var(--mid);
+  transition: color .2s, border-color .2s;
+}
+
+.hi {
+  border-color: var(--acc3);
+  color: var(--acc3);
+}

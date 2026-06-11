@@ -1,0 +1,21 @@
+.wrap {
+  display: inline;
+}
+
+.cursor {
+  display: inline-block;
+  color: var(--acc3);
+  font-weight: 300;
+  margin-left: 1px;
+  opacity: 1;
+}
+
+/* Only blink once typing is complete */
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
