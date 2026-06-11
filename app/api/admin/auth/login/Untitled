@@ -1,0 +1,26 @@
+## Error Type
+Runtime Error
+
+## Error Message
+Event handlers cannot be passed to Client Component props.
+  <div className=... style={{...}} onMouseEnter={function onMouseEnter} onMouseLeave=... children=...>
+                                                ^^^^^^^^^^^^^^^^^^^^^^^
+If you need interactivity, consider converting part of this to a Client Component.
+
+
+    at stringify (<anonymous>:1:18)
+    at stringify (<anonymous>:1:18)
+    at <anonymous> (app/admin/page.tsx:79:11)
+    at Array.map (<anonymous>:1:18)
+    at AdminDashboard (app/admin/page.tsx:78:11)
+
+## Code Frame
+  77 |           { label: 'Edit Contact', href: '/admin/contact', desc: 'Email, socials, availability' },
+  78 |         ].map(item => (
+> 79 |           <Link key={item.href} href={item.href} style={{ textDecoration: 'none' }}>
+     |           ^
+  80 |             <div className="admin-card" style={{ cursor: 'pointer', borderColor: 'rgba(255,255,255,.06)', transition: 'border-color .15s' }}
+  81 |               onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(62,207,207,.3)')}
+  82 |               onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,.06)')}>
+
+Next.js version: 16.2.7 (Turbopack)
