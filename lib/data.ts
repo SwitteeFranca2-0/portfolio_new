@@ -1,29 +1,33 @@
+// ── DEMO DATA ─────────────────────────────────────────────────────────────────
+// This file contains placeholder data shown when DEMO_MODE=true.
+// Replace with your own details in the admin dashboard.
+
 export const bio = {
-  name: 'Franca Uvere',
-  headline: 'Full-Stack & Backend Engineer · Lagos, NG',
-  tagline: 'I build scalable full-stack and backend systems with Python, React, and Node.js — shipping real products that work at scale.',
-  location: 'Lagos, Nigeria',
+  name: 'Alex Johnson',
+  headline: 'Full-Stack & Automation Engineer · New York, US',
+  tagline: 'I build scalable full-stack systems and intelligent automations — turning complex problems into clean, reliable software.',
+  location: 'New York, USA',
   availability: 'Open — remote & on-site',
   responseTime: 'Within 24 hours',
-  resumeUrl: 'https://franca-uvere.vercel.app/franca_uvere_resume.pdf',
-  photoUrl: null as string | null,   // set via admin dashboard
+  resumeUrl: null as string | null,
+  photoUrl:  null as string | null,
   typedRole: 'Software & Automation Engineer',
 }
 
 export const contact = {
-  email: 'francauvere1@gmail.com',
-  github: 'https://github.com/FrancaUvere',
-  linkedin: 'https://www.linkedin.com/in/franca-uvere/',
-  instagram: 'https://www.instagram.com/switteefranca/',
-  whatsapp: 'https://wa.me/2349020949301',
+  email:     'alex@example.com',
+  github:    'https://github.com',
+  linkedin:  'https://linkedin.com',
+  instagram: null as string | null,
+  whatsapp:  null as string | null,
 }
 
 export const marqueeItems = [
-  'Python', 'React JS', 'Node.js', 'Django', 'PostgreSQL',
-  'Full-Stack', 'Next.js', 'Firebase', 'REST APIs', 'Open to Work',
+  'TypeScript', 'React', 'Node.js', 'Python', 'PostgreSQL',
+  'Next.js', 'Docker', 'REST APIs', 'GraphQL', 'Open to Work',
 ]
 
-export type SkillItem = { name: string; highlight: boolean }
+export type SkillItem      = { name: string; highlight: boolean }
 export type SkillProficiency = 'expert' | 'proficient' | 'familiar'
 
 export type Skill = {
@@ -39,71 +43,70 @@ export type Skill = {
 export const skills: Skill[] = [
   {
     id: 1, icon: '⚛️', title: 'Frontend',
-    description: 'Responsive, interactive UIs built for performance and real users.',
-    proficiency: 'proficient', yearsExp: 3,
+    description: 'Responsive, accessible UIs built for performance and real users.',
+    proficiency: 'expert', yearsExp: 5,
     items: [
-      { name: 'React JS', highlight: true }, { name: 'Next.js', highlight: true },
-      { name: 'TypeScript', highlight: true }, { name: 'HTML/CSS', highlight: false },
-      { name: 'Tailwind', highlight: false }, { name: 'Redux', highlight: false },
+      { name: 'React',      highlight: true  },
+      { name: 'Next.js',    highlight: true  },
+      { name: 'TypeScript', highlight: true  },
+      { name: 'Tailwind',   highlight: false },
+      { name: 'HTML/CSS',   highlight: false },
     ],
   },
   {
-    id: 2, icon: '🐍', title: 'Backend',
-    description: 'Robust APIs and server-side systems that scale without breaking.',
-    proficiency: 'expert', yearsExp: 4,
+    id: 2, icon: '🖥️', title: 'Backend',
+    description: 'Scalable APIs and server-side systems built for reliability.',
+    proficiency: 'expert', yearsExp: 6,
     items: [
-      { name: 'Python', highlight: true }, { name: 'Django', highlight: true },
-      { name: 'Flask', highlight: false }, { name: 'Odoo', highlight: false },
-      { name: 'Node.js', highlight: true }, { name: 'Express', highlight: false },
+      { name: 'Node.js',    highlight: true  },
+      { name: 'Python',     highlight: true  },
+      { name: 'Express',    highlight: false },
+      { name: 'FastAPI',    highlight: false },
+      { name: 'GraphQL',    highlight: true  },
     ],
   },
   {
     id: 3, icon: '🗄️', title: 'Database',
-    description: 'Relational, document, and cloud-native data storage solutions.',
+    description: 'Relational and document databases, optimised queries and migrations.',
+    proficiency: 'proficient', yearsExp: 4,
+    items: [
+      { name: 'PostgreSQL', highlight: true  },
+      { name: 'MongoDB',    highlight: true  },
+      { name: 'Redis',      highlight: false },
+      { name: 'Prisma',     highlight: false },
+    ],
+  },
+  {
+    id: 4, icon: '⚙️', title: 'DevOps & Tools',
+    description: 'CI/CD pipelines, containers, and cloud infrastructure.',
     proficiency: 'proficient', yearsExp: 3,
     items: [
-      { name: 'PostgreSQL', highlight: true }, { name: 'Firestore', highlight: true },
-      { name: 'MongoDB', highlight: false }, { name: 'SQLite', highlight: false },
-      { name: 'SQL', highlight: false },
+      { name: 'Docker',     highlight: true  },
+      { name: 'Git',        highlight: false },
+      { name: 'GitHub Actions', highlight: false },
+      { name: 'Vercel',     highlight: false },
+      { name: 'Linux',      highlight: false },
     ],
   },
   {
-    id: 4, icon: '☁️', title: 'DevOps & Tools',
-    description: 'Shipping and maintaining software with modern tooling and workflows.',
+    id: 5, icon: '🤖', title: 'Automation',
+    description: 'Workflow automation, data pipelines, and system integrations.',
     proficiency: 'proficient', yearsExp: 2,
     items: [
-      { name: 'Git / GitHub', highlight: true }, { name: 'Docker', highlight: false },
-      { name: 'Vercel', highlight: false }, { name: 'Linux', highlight: false },
-      { name: 'Agile', highlight: false },
-    ],
-  },
-  {
-    id: 5, icon: '🛒', title: 'CMS & E-Commerce',
-    description: 'Custom WordPress and WooCommerce builds for clients that need reliability.',
-    proficiency: 'proficient', yearsExp: 2,
-    items: [
-      { name: 'WordPress', highlight: true }, { name: 'WooCommerce', highlight: true },
-      { name: 'PHP', highlight: false },
-    ],
-  },
-  {
-    id: 6, icon: '🏗️', title: 'Architecture',
-    description: 'Designing systems that are maintainable, testable, and built to last.',
-    proficiency: 'proficient', yearsExp: 3,
-    items: [
-      { name: 'REST APIs', highlight: true }, { name: 'MVC', highlight: false },
-      { name: 'Clean Code', highlight: false }, { name: 'Auth Systems', highlight: false },
-      { name: 'Microservices', highlight: false },
+      { name: 'n8n',        highlight: true  },
+      { name: 'Zapier',     highlight: false },
+      { name: 'Webhooks',   highlight: false },
+      { name: 'Cron Jobs',  highlight: false },
     ],
   },
 ]
 
 export type AutomationDetails = {
-  tool: string              // n8n, Zapier, Make, etc.
-  trigger: string           // Webhook, Schedule, Form submit, Email
-  integrations: string[]    // Slack, Notion, Gmail, Airtable, etc.
+  tool: string
+  trigger: string
+  integrations: string[]
   workflowNodes?: number
-  timeSaved?: string        // "~4 hrs/week"
+  timeSaved?: string
   status: 'active' | 'archived' | 'in-progress'
 }
 
@@ -114,10 +117,10 @@ export type ProjectMedia = {
 }
 
 export const PROJECT_CATEGORIES = [
-  { id: 'all',      label: 'All Projects' },
-  { id: 'software', label: 'Software Projects' },
-  { id: 'automation', label: 'Automations' },
-  { id: 'scripts',  label: 'Scripts & Others' },
+  { id: 'all',        label: 'All Projects'      },
+  { id: 'software',   label: 'Software Projects' },
+  { id: 'automation', label: 'Automations'       },
+  { id: 'scripts',    label: 'Scripts & Others'  },
 ] as const
 
 export type ProjectCategory = typeof PROJECT_CATEGORIES[number]['id']
@@ -139,110 +142,99 @@ export type Project = {
   order: number
   stack: string[]
   features?: string[]
-  automation?: AutomationDetails   // only set for category: 'automation'
+  automation?: AutomationDetails
   media: ProjectMedia[]
 }
 
 export const projects: Project[] = [
   {
-    id: 1, slug: 'academic-connect', title: 'Academic Connect',
-    type: 'Fullstack · Client', category: 'software', year: 2024, featured: true, order: 0,
-    description: 'A collaboration platform for researchers, institutions, and organizations. Features real-time feeds, role-based access control, and institution management dashboards.',
-    body: 'Built from the ground up for a client in the academic research space. The platform allows researchers to post updates, follow institutions, and collaborate on projects. Role-based access control ensures that institution admins can manage their members, while a real-time feed keeps everyone up to date. The dashboard provides analytics on engagement and activity across the platform.',
-    outcome: 'Live client project — actively used by researchers and academic institutions.',
-    imageUrl: 'https://franca-uvere.vercel.app/images/Acadmic-Connect-Feeds-Page.png',
-    liveUrl: 'https://franca-uvere.vercel.app/projects/1',
-    stack: ['Next.js', 'React', 'Firestore', 'TypeScript'],
-    features: ['Real-time activity feed', 'Role-based access control', 'Institution management dashboard', 'Researcher profiles & connections', 'Publication tracking'],
+    id: 1, slug: 'saas-dashboard', title: 'SaaS Analytics Dashboard',
+    type: 'Fullstack · Client', category: 'software', year: 2024,
+    featured: true, order: 0,
+    description: 'A multi-tenant analytics dashboard with real-time data visualisation, role-based access, and automated reporting for a B2B SaaS client.',
+    body: 'Built end-to-end for a SaaS company needing visibility into user behaviour across their product. Features a live metrics feed, customisable chart widgets, CSV/PDF export, and a white-label mode for enterprise customers. Role-based access lets admins, analysts, and viewers each see tailored views of the same data.',
+    outcome: 'Deployed to 120+ enterprise clients. Reduced manual reporting time by 80%.',
+    imageUrl: 'https://picsum.photos/seed/dash1/1200/700',
+    liveUrl:  '#',
+    stack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Prisma', 'Recharts'],
+    features: [
+      'Real-time metrics feed',
+      'Role-based access control',
+      'Customisable chart widgets',
+      'Automated PDF/CSV reports',
+      'Multi-tenant white-label mode',
+    ],
     media: [
-      { type: 'image', url: 'https://franca-uvere.vercel.app/images/Acadmic-Connect-Feeds-Page.png', caption: 'Feeds page — real-time activity from followed researchers' },
-      { type: 'image', url: 'https://picsum.photos/seed/ac2/1200/700', caption: 'Institution dashboard — member management and analytics' },
-      { type: 'image', url: 'https://picsum.photos/seed/ac3/1200/700', caption: 'Researcher profile — publications and connections' },
-      { type: 'video', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', caption: 'Platform walkthrough — 2 min demo' },
+      { type: 'image', url: 'https://picsum.photos/seed/dash1/1200/700', caption: 'Main dashboard — real-time analytics overview' },
+      { type: 'image', url: 'https://picsum.photos/seed/dash2/1200/700', caption: 'Chart builder — drag-and-drop widget configuration' },
+      { type: 'image', url: 'https://picsum.photos/seed/dash3/1200/700', caption: 'Report export — scheduled PDF delivery' },
     ],
   },
   {
-    id: 2, slug: 'banking-platform', title: 'Banking Platform',
-    type: 'Backend · Personal', category: 'software', year: 2024, featured: false, order: 1,
-    description: 'Secure online banking backend — account management, fund transfers, transaction tracking, full auth and audit logging.',
-    body: 'A backend-only project focused on building a production-grade banking API. Implements JWT authentication with refresh token rotation, account management (create, freeze, close), fund transfers with atomic transactions, and a full audit log for compliance. All endpoints are tested and documented.',
-    liveUrl: 'https://franca-uvere.vercel.app/projects/2',
-    stack: ['Python', 'Flask', 'SQLite'],
-    features: ['JWT auth with refresh token rotation', 'Atomic fund transfers', 'Account lifecycle management', 'Full audit logging', 'Comprehensive test coverage'],
+    id: 2, slug: 'rest-api-boilerplate', title: 'REST API Boilerplate',
+    type: 'Backend · Open Source', category: 'software', year: 2024,
+    featured: false, order: 1,
+    description: 'A production-ready Node.js REST API starter with JWT auth, role-based permissions, rate limiting, and full test coverage.',
+    body: 'A batteries-included API boilerplate designed to eliminate the repetitive setup work on every new project. Ships with user auth, refresh tokens, email verification, role guards, request validation, structured logging, and a full Jest test suite. Used as the starting point for client projects.',
+    repoUrl: '#',
+    stack: ['Node.js', 'Express', 'PostgreSQL', 'Jest'],
+    features: [
+      'JWT + refresh token auth',
+      'Role-based route guards',
+      'Request validation middleware',
+      'Rate limiting',
+      '95% test coverage',
+    ],
     media: [
-      { type: 'image', url: 'https://picsum.photos/seed/bank1/1200/700', caption: 'API documentation — Swagger UI' },
-      { type: 'image', url: 'https://picsum.photos/seed/bank2/1200/700', caption: 'Transaction flow — fund transfer sequence' },
-      { type: 'image', url: 'https://picsum.photos/seed/bank3/1200/700', caption: 'Auth system — JWT + refresh token rotation' },
+      { type: 'image', url: 'https://picsum.photos/seed/api1/1200/700', caption: 'API docs — auto-generated Swagger UI' },
+      { type: 'image', url: 'https://picsum.photos/seed/api2/1200/700', caption: 'Test suite — full coverage report' },
     ],
   },
   {
-    id: 3, slug: 'ecommerce-store', title: 'E-Commerce Store',
-    type: 'Fullstack · Client', category: 'software', year: 2023, featured: false, order: 2,
-    description: 'Full-featured e-commerce platform with product management, cart, Stripe payment processing, and order tracking.',
-    body: 'A WooCommerce build for a fashion client. Custom theme development, Stripe payment gateway integration, and a bespoke product management workflow. The client manages inventory, discounts, and shipping zones entirely from the WordPress admin. Optimised for mobile-first browsing.',
-    liveUrl: 'https://franca-uvere.vercel.app/projects/3',
-    stack: ['WordPress', 'WooCommerce', 'PHP'],
-    features: ['Custom WordPress theme', 'Stripe payment integration', 'Inventory & shipping management', 'Mobile-first responsive design', 'Discount & coupon engine'],
+    id: 3, slug: 'ecommerce-platform', title: 'E-Commerce Platform',
+    type: 'Fullstack · Client', category: 'software', year: 2023,
+    featured: false, order: 2,
+    description: 'Custom e-commerce storefront with product management, cart, Stripe checkout, and order tracking — built for a fashion brand.',
+    body: 'A fully custom storefront replacing an off-the-shelf solution that had become too limiting. Built with Next.js for performance, Stripe for payments, and a headless CMS for product management. The client manages everything — inventory, discounts, shipping — from a purpose-built admin panel.',
+    stack: ['Next.js', 'Stripe', 'Sanity CMS', 'Tailwind'],
+    features: [
+      'Headless CMS product management',
+      'Stripe payment integration',
+      'Real-time inventory tracking',
+      'Mobile-first responsive design',
+      'Discount & coupon engine',
+    ],
     media: [
-      { type: 'image', url: 'https://picsum.photos/seed/ecom1/1200/700', caption: 'Storefront — product listing page' },
-      { type: 'image', url: 'https://picsum.photos/seed/ecom2/1200/700', caption: 'Product detail — with variant selection' },
-      { type: 'image', url: 'https://picsum.photos/seed/ecom3/1200/700', caption: 'Checkout — Stripe payment flow' },
-      { type: 'video', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', caption: 'Store walkthrough' },
+      { type: 'image', url: 'https://picsum.photos/seed/shop1/1200/700', caption: 'Storefront — product listing page' },
+      { type: 'image', url: 'https://picsum.photos/seed/shop2/1200/700', caption: 'Checkout — Stripe payment flow' },
     ],
   },
   {
-    id: 4, slug: 'task-mgmt-api', title: 'Task Mgmt API',
-    type: 'Backend · Personal', category: 'scripts', year: 2023, featured: false, order: 3,
-    description: 'RESTful API with JWT auth, role-based authorization, and full CRUD. Clean architecture with test coverage throughout.',
-    body: 'A clean, well-tested REST API for task management. Features workspace-based multi-tenancy, role-based authorization (admin, member, viewer), full CRUD on tasks and boards, and comprehensive test coverage using Jest. Designed with clean architecture principles — controllers, services, and repositories are fully decoupled.',
-    liveUrl: 'https://franca-uvere.vercel.app/projects/4',
-    stack: ['Node.js', 'Express', 'PostgreSQL'],
-    features: ['Workspace-based multi-tenancy', 'Role-based authorization', 'Full CRUD on tasks & boards', 'Clean architecture (controller/service/repo)', '94% test coverage with Jest'],
-    media: [
-      { type: 'image', url: 'https://picsum.photos/seed/task1/1200/700', caption: 'API routes — task and board endpoints' },
-      { type: 'image', url: 'https://picsum.photos/seed/task2/1200/700', caption: 'Test suite — 94% coverage' },
+    id: 4, slug: 'crm-sync-automation', title: 'CRM Sync Pipeline',
+    type: 'Automation · Client', category: 'automation', year: 2024,
+    featured: false, order: 3,
+    description: 'n8n workflow that syncs leads from multiple sources into a central CRM, deduplicates records, and triggers personalised follow-up sequences.',
+    body: 'A client was managing leads across five different tools with no single source of truth. This automation watches for new submissions across all channels, deduplicates by email, enriches with company data, pushes to HubSpot, and triggers a personalised email sequence based on the lead source.',
+    outcome: 'Eliminated 6hrs/week of manual CRM work. Lead response time dropped from 4hrs to 12mins.',
+    stack: ['n8n', 'HubSpot', 'Typeform', 'Clearbit', 'Gmail'],
+    features: [
+      'Multi-source lead capture',
+      'Email deduplication logic',
+      'Company data enrichment',
+      'HubSpot CRM sync',
+      'Source-based email sequences',
     ],
-  },
-  {
-    id: 5, slug: 'lead-capture-automation', title: 'Lead Capture Pipeline',
-    type: 'Automation · Client', category: 'automation', year: 2024, featured: false, order: 4,
-    description: 'Automated lead capture from Typeform into Notion CRM, with Slack notifications and a follow-up email sequence via Gmail — zero manual data entry.',
-    body: 'A client was manually copying leads from their Typeform into a Notion database, then sending individual follow-up emails. This n8n workflow watches for new Typeform submissions, creates a structured record in Notion, posts a real-time notification to their Slack #leads channel, and triggers a 3-step Gmail follow-up sequence with a 24hr delay between each. Saved the client approximately 5 hours of manual work per week.',
-    outcome: 'Live and active — processing 40–60 leads/month with zero manual intervention.',
-    stack: ['n8n', 'Typeform', 'Notion', 'Slack', 'Gmail'],
-    features: ['Typeform → Notion record creation', 'Slack real-time lead notifications', '3-step Gmail follow-up sequence', '24hr delay logic between emails', 'Error handling with Slack alerts'],
     automation: {
       tool: 'n8n',
-      trigger: 'Typeform submission (webhook)',
-      integrations: ['Typeform', 'Notion', 'Slack', 'Gmail'],
-      workflowNodes: 14,
-      timeSaved: '~5 hrs/week',
+      trigger: 'Webhook (multi-source)',
+      integrations: ['HubSpot', 'Typeform', 'Clearbit', 'Gmail'],
+      workflowNodes: 22,
+      timeSaved: '~6 hrs/week',
       status: 'active',
     },
     media: [
-      { type: 'image', url: 'https://picsum.photos/seed/auto1/1200/700', caption: 'n8n workflow — full pipeline view' },
-      { type: 'image', url: 'https://picsum.photos/seed/auto2/1200/700', caption: 'Notion CRM — auto-populated lead records' },
-    ],
-  },
-  {
-    id: 6, slug: 'invoice-automation', title: 'Invoice & Payment Tracker',
-    type: 'Automation · Personal', category: 'automation', year: 2024, featured: false, order: 5,
-    description: 'n8n workflow that monitors a Gmail inbox for payment confirmations, updates an Airtable tracker, and sends a WhatsApp receipt to the client automatically.',
-    body: 'Built to eliminate the overhead of manually tracking freelance payments. The workflow monitors a dedicated Gmail label for payment confirmation emails, extracts the amount and client name, logs it to Airtable, marks the corresponding invoice as paid, and sends a WhatsApp confirmation to the client via the WhatsApp Business API. Also generates a monthly summary report sent to a personal email every 1st of the month.',
-    outcome: 'Handles all payment tracking across 8 active clients — fully automated.',
-    stack: ['n8n', 'Gmail', 'Airtable', 'WhatsApp API'],
-    features: ['Gmail label monitoring', 'Payment data extraction', 'Airtable invoice status update', 'WhatsApp client receipt', 'Monthly summary report (scheduled)'],
-    automation: {
-      tool: 'n8n',
-      trigger: 'Gmail label trigger + Monthly schedule',
-      integrations: ['Gmail', 'Airtable', 'WhatsApp Business API'],
-      workflowNodes: 18,
-      timeSaved: '~3 hrs/month',
-      status: 'active',
-    },
-    media: [
-      { type: 'image', url: 'https://picsum.photos/seed/auto3/1200/700', caption: 'Workflow overview — Gmail to Airtable + WhatsApp' },
-      { type: 'image', url: 'https://picsum.photos/seed/auto4/1200/700', caption: 'Airtable — auto-updated invoice tracker' },
+      { type: 'image', url: 'https://picsum.photos/seed/crm1/1200/700', caption: 'n8n workflow — full sync pipeline' },
+      { type: 'image', url: 'https://picsum.photos/seed/crm2/1200/700', caption: 'HubSpot — auto-enriched contact records' },
     ],
   },
 ]
@@ -261,15 +253,21 @@ export type Experience = {
 
 export const experiences: Experience[] = [
   {
-    id: 1, company: 'Freelance', role: 'Full-Stack Developer',
-    startDate: '2023', endDate: undefined, order: 0,
-    description: 'Working with clients across research, e-commerce, and fintech — owning architecture, backend, and frontend delivery end-to-end. Built and shipped Academic Connect and Bodijah e-commerce for live clients.',
-    tags: [{ name: 'React' }, { name: 'Python' }, { name: 'Node.js' }, { name: 'PostgreSQL' }, { name: 'Firebase' }],
+    id: 1, company: 'Acme Corp', role: 'Senior Full-Stack Engineer',
+    startDate: '2022', endDate: undefined, order: 0,
+    description: 'Leading frontend and backend development for a suite of B2B SaaS products. Own the architecture, technical decisions, and mentoring of junior engineers across three product teams.',
+    tags: [{ name: 'React' }, { name: 'Node.js' }, { name: 'PostgreSQL' }, { name: 'TypeScript' }],
   },
   {
-    id: 2, company: 'Personal Projects', role: 'Backend Engineer',
-    startDate: '2022', endDate: '2023', order: 1,
-    description: 'Built a portfolio of backend systems including a secure banking platform and RESTful task API. Focus on auth, data modeling, and writing clean, well-tested, maintainable code.',
-    tags: [{ name: 'Flask' }, { name: 'Django' }, { name: 'Express' }, { name: 'SQLite' }, { name: 'PostgreSQL' }],
+    id: 2, company: 'Startup Studio', role: 'Full-Stack Developer',
+    startDate: '2020', endDate: '2022', order: 1,
+    description: 'Worked across multiple early-stage startups as a generalist engineer — from MVP build-out to scaling infrastructure. Shipped products in fintech, edtech, and logistics.',
+    tags: [{ name: 'Python' }, { name: 'Django' }, { name: 'React' }, { name: 'AWS' }],
+  },
+  {
+    id: 3, company: 'Freelance', role: 'Backend Engineer',
+    startDate: '2018', endDate: '2020', order: 2,
+    description: 'Built REST APIs, automation workflows, and data pipelines for clients across e-commerce, media, and finance. Focused on clean architecture and long-term maintainability.',
+    tags: [{ name: 'Node.js' }, { name: 'Express' }, { name: 'MongoDB' }, { name: 'Docker' }],
   },
 ]

@@ -1,6 +1,7 @@
 import { ProjectModel }    from '@/lib/models/ProjectModel'
 import { SkillModel }      from '@/lib/models/SkillModel'
 import { ExperienceModel } from '@/lib/models/ExperienceModel'
+import { DEMO_MODE } from '@/lib/demo'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -44,6 +45,28 @@ export default async function AdminDashboard() {
         <div className="ar-stat">
           <div className="ar-stat-n" style={{ color: 'var(--adm-accent)' }}>1</div>
           <div className="ar-stat-l">Sticky Project</div>
+        </div>
+      </div>
+
+      {/* Demo Mode Status */}
+      <div className="ar-card" style={{ borderColor: DEMO_MODE ? 'rgba(123,94,167,.4)' : 'rgba(255,255,255,.06)' }}>
+        <div className="ar-card-t">Data Mode</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span className={`ar-badge ${DEMO_MODE ? 'ar-ba-b' : 'ar-ba-t'}`}>
+              {DEMO_MODE ? 'Demo Mode' : 'Live Data'}
+            </span>
+            <span style={{ fontSize: 13, color: 'var(--adm-text-2)' }}>
+              {DEMO_MODE
+                ? 'Public site shows sample data from lib/data.ts'
+                : 'Public site reads from the database'}
+            </span>
+          </div>
+          {DEMO_MODE && (
+            <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 11, color: 'var(--adm-text-3)' }}>
+              Remove DEMO_MODE=true from .env to go live
+            </span>
+          )}
         </div>
       </div>
 

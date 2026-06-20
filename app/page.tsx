@@ -1,4 +1,6 @@
 export const dynamic = 'force-dynamic'
+import { DEMO_MODE } from '@/lib/demo'
+import * as DemoData from '@/lib/data'
 import { BioModel }           from '@/lib/models/BioModel'
 import { ContactModel }       from '@/lib/models/ContactModel'
 import { SkillModel }         from '@/lib/models/SkillModel'
@@ -26,6 +28,30 @@ import Testimonials from '@/components/home/Testimonials'
 import Contact from '@/components/home/Contact'
 
 export default async function Home() {
+  if (DEMO_MODE) {
+    const bio = { ...DemoData.bio, backgroundStyle: 'particles' }
+    const contact = DemoData.contact
+
+    return (
+      <>
+        <GlobalBackground style={bio.backgroundStyle} />
+        <main style={{ position: 'relative', zIndex: 1 }}>
+          <Hero bio={bio} techBadges={DemoData.marqueeItems} />
+          <Marquee items={DemoData.marqueeItems} />
+          <Stats stats={[]} />
+          <Skills skills={DemoData.skills} />
+          <Services services={[]} />
+          <Projects projects={DemoData.projects} />
+          <Experience experiences={DemoData.experiences} />
+          <Education education={[]} />
+          <Certifications certifications={[]} />
+          <Testimonials testimonials={[]} />
+          <Contact bio={bio} contact={contact} />
+        </main>
+      </>
+    )
+  }
+
   const [
     bioRaw,
     contactRaw,

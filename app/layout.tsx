@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 import PublicShell from '@/components/layout/PublicShell'
 import { BioModel } from '@/lib/models/BioModel'
+import { DEMO_MODE } from '@/lib/demo'
+import DemoBanner from '@/components/ui/DemoBanner'
 
 export async function generateMetadata(): Promise<Metadata> {
   const bio = await BioModel.get().catch(() => null)
@@ -54,6 +56,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <PublicShell bio={bio}>
           {children}
         </PublicShell>
+        {DEMO_MODE && <DemoBanner />}
       </body>
     </html>
   )
