@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 import MediaUpload from '@/components/admin/MediaUpload'
 import RichTextEditor from '@/components/admin/RichTextEditor'
