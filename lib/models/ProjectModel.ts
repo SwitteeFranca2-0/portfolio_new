@@ -158,6 +158,12 @@ export class ProjectModel extends BaseModel {
     })
   }
 
+  static async createMedia(projectId: number, media: { type: string; url: string; caption?: string }[]) {
+    return this.db.projectMedia.createMany({
+      data: media.map((m, i) => ({ projectId, type: m.type, url: m.url, caption: m.caption || null, order: i })),
+    })
+  }
+
   static async delete(id: number) {
     return this.db.project.delete({ where: { id } })
   }

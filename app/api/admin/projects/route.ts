@@ -5,6 +5,9 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const project = await ProjectModel.create(body)
+    if (body.media?.length) {
+      await ProjectModel.createMedia(project.id, body.media)
+    }
     return NextResponse.json(project)
   } catch (e) {
     console.error(e)

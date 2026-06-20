@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import MediaUpload from '@/components/admin/MediaUpload'
 
 type Category = { id: string; label: string; order: number }
 
@@ -11,6 +12,7 @@ export default function NewProjectForm({ categories, nextOrder }: { categories: 
     year: new Date().getFullYear(), description: '', body: '', outcome: '',
     imageUrl: '', liveUrl: '', repoUrl: '', featured: false,
     order: nextOrder, stack: '', features: '',
+    media: [] as { type: 'image'|'video'; url: string; caption: string }[],
   })
   const [status, setStatus] = useState<'idle'|'saving'|'error'>('idle')
 
@@ -38,6 +40,7 @@ export default function NewProjectForm({ categories, nextOrder }: { categories: 
         order: Number(form.order),
         stack: form.stack.split(',').map((s: string) => s.trim()).filter(Boolean),
         features: form.features.split('\n').map((s: string) => s.trim()).filter(Boolean),
+        media: form.media,
       }),
     })
     if (res.ok) {
@@ -94,6 +97,65 @@ export default function NewProjectForm({ categories, nextOrder }: { categories: 
         <div className="ar-field"><label className="ar-label">Stack (comma-separated)</label><input name="stack" className="ar-input" value={form.stack} onChange={set} /></div>
         <div className="ar-field"><label className="ar-label">Features (one per line)</label><textarea name="features" className="ar-textarea" value={form.features} onChange={set} /></div>
       </div>
+      <div className="ar-card">
+        <div className="ar-card-t">Media Gallery</div>
+
+        {form.media.map((item, i) => (
+          <div key={i} style={{ marginBottom: '1.25rem', padding: '1rem', background: 'rgba(255,255,255,.02)', border: '1px solid rgba(255,255,255,.04)', borderRadius: 8 }}>
+            <div className="ar-g2" style={{ marginBottom: '.75rem' }}>
+              <div className="ar-field">
+                <label className="ar-label">Type</label>
+                <select className="ar-select" value={item.type}
+                  onChange={e => setForm(f => ({ ...f, media: f.media.map((m, j) => j === i ? { ...m, type: e.target.value as 'image'|'video' } : m) }))}>
+                  <option value="image">Image</option>
+                  <option value="video">Video (embed URL)</option>
+                </select>
+              </div>
+              <div className="ar-field">
+                <label className="ar-label">Caption</label>
+                <input className="ar-input" value={item.caption}
+                  onChange={e => setForm(f => ({ ...f, media: f.media.map((m, j) => j === i ? { ...m, caption: e.target.value } : m) }))}
+                  placeholder="Optional caption" />
+              </div>
+            </div>
+
+            {item.type === 'video' ? (
+              <div className="ar-field">
+                <label className="ar-label">Video Embed URL</label>
+                <input className="ar-input" value={item.url}
+                  onChange={e => setForm(f => ({ ...f, media: f.media.map((m, j) => j === i ? { ...m, url: e.target.value } : m) }))}
+                  placeholder="https://www.youtube.com/embed/..." />
+              </div>
+            ) : (
+              <MediaUpload
+                label="Image"
+                value={item.url}
+                onChange={(url) => setForm(f => ({ ...f, media: f.media.map((m, j) => j === i ? { ...m, url } : m) }))}
+                accept="image/*"
+                folder={`projects/${form.slug}`}
+                caption={item.caption}
+              />
+            )}
+
+            <button type="button" className="ar-btn ar-btn-d" style={{ marginTop: '.5rem' }}
+              onClick={() => setForm(f => ({ ...f, media: f.media.filter((_, j) => j !== i) }))}>
+              Remove
+            </button>
+          </div>
+        ))}
+
+        <div style={{ display: 'flex', gap: '.75rem', marginTop: '.5rem' }}>
+          <button type="button" className="ar-btn ar-btn-o"
+            onClick={() => setForm(f => ({ ...f, media: [...f.media, { type: 'image', url: '', caption: '' }] }))}>
+            + Add Image
+          </button>
+          <button type="button" className="ar-btn ar-btn-o"
+            onClick={() => setForm(f => ({ ...f, media: [...f.media, { type: 'video', url: '', caption: '' }] }))}>
+            + Add Video
+          </button>
+        </div>
+      </div>
+
       <button type="submit" className="ar-btn ar-btn-p" disabled={status === 'saving'}>
         {status === 'saving' ? 'Creating...' : 'Create Project'}
       </button>
