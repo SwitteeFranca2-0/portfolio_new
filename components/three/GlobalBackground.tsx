@@ -1,17 +1,13 @@
 'use client'
 import dynamic from 'next/dynamic'
 
-const HeroScene = dynamic(() => import('./HeroScene'), { ssr: false })
+const HeroSceneLaptop    = dynamic(() => import('./HeroSceneLaptop'),    { ssr: false })
+const HeroSceneParticles = dynamic(() => import('./HeroSceneParticles'), { ssr: false })
 
-export default function GlobalBackground() {
+export default function GlobalBackground({ style = 'laptop' }: { style?: string }) {
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      zIndex: 0,
-      pointerEvents: 'none',
-    }}>
-      <HeroScene />
+    <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+      {style === 'particles' ? <HeroSceneParticles /> : <HeroSceneLaptop />}
     </div>
   )
 }

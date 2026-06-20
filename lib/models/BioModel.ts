@@ -9,6 +9,7 @@ export class BioModel extends BaseModel {
     name?: string; headline?: string; tagline?: string; typedRole?: string
     location?: string; availability?: string; responseTime?: string
     photoUrl?: string | null; resumeUrl?: string | null
+    backgroundStyle?: string
   }) {
     return this.db.bio.upsert({
       where: { id: 1 },
@@ -22,8 +23,9 @@ export class BioModel extends BaseModel {
         location:     data.location     ?? '',
         availability: data.availability ?? '',
         responseTime: data.responseTime ?? '',
-        photoUrl:     data.photoUrl     ?? null,
-        resumeUrl:    data.resumeUrl    ?? null,
+        photoUrl:        data.photoUrl        ?? null,
+        resumeUrl:       data.resumeUrl       ?? null,
+        backgroundStyle: data.backgroundStyle ?? 'laptop',
       },
     })
   }

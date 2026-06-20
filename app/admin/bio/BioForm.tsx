@@ -14,7 +14,23 @@ type Bio = {
   responseTime: string
   photoUrl: string | null
   resumeUrl: string | null
+  backgroundStyle: string
 }
+
+const BG_OPTIONS = [
+  {
+    value: 'laptop',
+    label: 'Laptop Journey',
+    desc: 'Scroll-driven laptop that opens, spins, and dissolves into a nebula',
+    preview: '💻 → ✨',
+  },
+  {
+    value: 'particles',
+    label: 'Particle Field',
+    desc: 'Scroll-reactive particle cloud with floating geometry and atmospheric colour shifts',
+    preview: '✦ ✦ ✦',
+  },
+]
 
 export default function BioForm({ bio }: { bio: Bio | null }) {
   const [form, setForm] = useState({
@@ -25,8 +41,9 @@ export default function BioForm({ bio }: { bio: Bio | null }) {
     location:     bio?.location ?? '',
     availability: bio?.availability ?? '',
     responseTime: bio?.responseTime ?? '',
-    photoUrl:     bio?.photoUrl ?? '',
-    resumeUrl:    bio?.resumeUrl ?? '',
+    photoUrl:        bio?.photoUrl        ?? '',
+    resumeUrl:       bio?.resumeUrl       ?? '',
+    backgroundStyle: bio?.backgroundStyle ?? 'laptop',
   })
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
 
@@ -116,6 +133,46 @@ export default function BioForm({ bio }: { bio: Bio | null }) {
           hint="PDF — shown as download link in nav"
           folder="resume"
         />
+      </div>
+
+      {/* ── Background Style ── */}
+      <div className="ar-card">
+        <div className="ar-card-t">Background Style</div>
+        <p style={{ fontSize: 12, color: 'var(--adm-text-3)', marginBottom: 16 }}>
+          Choose the 3D animated background shown behind the portfolio.
+        </p>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          {BG_OPTIONS.map(opt => {
+            const active = form.backgroundStyle === opt.value
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setForm(f => ({ ...f, backgroundStyle: opt.value }))}
+                style={{
+                  flex: 1, minWidth: 200, textAlign: 'left', cursor: 'pointer',
+                  background: active ? 'rgba(62,207,207,.08)' : 'rgba(255,255,255,.02)',
+                  border: `1px solid ${active ? 'rgba(62,207,207,.5)' : 'var(--adm-border)'}`,
+                  borderRadius: 8, padding: '14px 16px',
+                  transition: 'all .15s',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 600, color: active ? 'var(--adm-accent)' : 'var(--adm-text)' }}>
+                    {opt.label}
+                  </span>
+                  <span style={{ fontSize: 16 }}>{opt.preview}</span>
+                </div>
+                <p style={{ fontSize: 11, color: 'var(--adm-text-3)', lineHeight: 1.5, margin: 0 }}>{opt.desc}</p>
+                {active && (
+                  <div style={{ marginTop: 8, fontFamily: "'DM Mono',monospace", fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--adm-accent)' }}>
+                    ✓ Active
+                  </div>
+                )}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       <button

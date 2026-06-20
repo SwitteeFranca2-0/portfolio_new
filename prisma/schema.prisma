@@ -10,16 +10,17 @@ datasource db {
 // ── Bio (singleton — always id = 1) ─────────────────────────────────────────
 
 model Bio {
-  id           Int     @id @default(1)
-  name         String
-  headline     String
-  tagline      String
-  typedRole    String
-  location     String
-  availability String
-  responseTime String
-  photoUrl     String?
-  resumeUrl    String?
+  id              Int     @id @default(1)
+  name            String
+  headline        String
+  tagline         String
+  typedRole       String
+  location        String
+  availability    String
+  responseTime    String
+  photoUrl        String?
+  resumeUrl       String?
+  backgroundStyle String  @default("laptop")   // "laptop" | "particles"
 }
 
 // ── Projects ─────────────────────────────────────────────────────────────────
