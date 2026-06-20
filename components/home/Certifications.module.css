@@ -1,0 +1,67 @@
+.section {
+  background: rgba(255,255,255,.015);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid var(--rule);
+  padding: 1.25rem 1.5rem;
+  transition: border-color .2s;
+}
+
+.card:hover {
+  border-color: rgba(62,207,207,.2);
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .5rem;
+}
+
+.name {
+  font-size: .9rem;
+  font-weight: 500;
+  color: var(--fg);
+  line-height: 1.4;
+}
+
+.link {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .08em;
+  color: var(--acc3);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity .2s;
+}
+
+.link:hover {
+  opacity: .7;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.issuer {
+  font-size: .75rem;
+  color: var(--mid);
+}
+
+.date {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .06em;
+  color: var(--mid);
+}

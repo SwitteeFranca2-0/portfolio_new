@@ -1,0 +1,62 @@
+.section {
+  background: rgba(255,255,255,.015);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  border: 1px solid var(--rule);
+  padding: 2rem;
+  background: rgba(255,255,255,.02);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.card::before {
+  content: '"';
+  position: absolute;
+  top: .5rem;
+  left: 1.5rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem;
+  color: var(--acc3);
+  opacity: .15;
+  line-height: 1;
+}
+
+.quote {
+  font-size: .9rem;
+  color: var(--mid);
+  line-height: 1.8;
+  font-style: italic;
+  padding-top: 1rem;
+}
+
+.author {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: .06em;
+  color: var(--fg);
+}
+
+.role {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mid);
+}

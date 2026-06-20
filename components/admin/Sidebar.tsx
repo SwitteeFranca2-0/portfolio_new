@@ -3,13 +3,18 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 
 const navItems = [
-  { href: '/admin',            label: 'Dashboard',  icon: '⬡' },
+  { href: '/admin',                 label: 'Dashboard',      icon: '⬡' },
   { section: 'Content' },
-  { href: '/admin/bio',        label: 'Bio',        icon: '◉' },
-  { href: '/admin/projects',   label: 'Projects',   icon: '▣' },
-  { href: '/admin/skills',     label: 'Skills',     icon: '◈' },
-  { href: '/admin/experience', label: 'Experience', icon: '◑' },
-  { href: '/admin/contact',    label: 'Contact',    icon: '◎' },
+  { href: '/admin/bio',             label: 'Bio',            icon: '◉' },
+  { href: '/admin/projects',        label: 'Projects',       icon: '▣' },
+  { href: '/admin/skills',          label: 'Skills',         icon: '◈' },
+  { href: '/admin/experience',      label: 'Experience',     icon: '◑' },
+  { href: '/admin/education',       label: 'Education',      icon: '◐' },
+  { href: '/admin/services',        label: 'Services',       icon: '◇' },
+  { href: '/admin/testimonials',    label: 'Testimonials',   icon: '❝' },
+  { href: '/admin/certifications',  label: 'Certifications', icon: '◻' },
+  { href: '/admin/stats',           label: 'Stats',          icon: '◆' },
+  { href: '/admin/contact',         label: 'Contact',        icon: '◎' },
 ]
 
 export default function Sidebar() {
