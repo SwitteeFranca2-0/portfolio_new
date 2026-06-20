@@ -1,5 +1,11 @@
 export const dynamic = 'force-dynamic'
+import type { Metadata } from 'next'
 import { BioModel }     from '@/lib/models/BioModel'
+
+export const metadata: Metadata = {
+  title: 'Contact',
+  description: 'Get in touch with Franca Uvere — open to full-time roles, freelance collaborations, and automation projects.',
+}
 import { ContactModel } from '@/lib/models/ContactModel'
 import ContactClient from './ContactClient'
 

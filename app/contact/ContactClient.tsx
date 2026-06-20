@@ -36,6 +36,7 @@ type Props = {
 export default function ContactClient({ bio, contact }: Props) {
   const [form, setForm] = useState<FormState>({ name: '', email: '', subject: '', message: '' })
   const [status, setStatus] = useState<SubmitState>('idle')
+  const [error, setError] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
@@ -44,8 +45,18 @@ export default function ContactClient({ bio, contact }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('sending')
-    await new Promise((r) => setTimeout(r, 1200))
-    setStatus('sent')
+    const res = await fetch('/api/contact', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(form),
+    })
+    if (res.ok) {
+      setStatus('sent')
+    } else {
+      const data = await res.json().catch(() => ({}))
+      setError(data.error ?? 'Something went wrong — please try again.')
+      setStatus('idle')
+    }
   }
 
   return (
@@ -99,6 +110,9 @@ export default function ContactClient({ bio, contact }: Props) {
                   placeholder="Tell me about your project or idea..."
                   value={form.message} onChange={handleChange} required />
               </div>
+              {error && (
+                <p style={{ fontSize: '.82rem', color: '#e85d75', marginTop: '.5rem' }}>{error}</p>
+              )}
               <button className={styles.submit} type="submit" disabled={status === 'sending'}>
                 {status === 'sending' ? 'Sending...' : 'Send Message →'}
               </button>
