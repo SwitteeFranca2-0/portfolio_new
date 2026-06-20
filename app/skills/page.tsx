@@ -1,5 +1,11 @@
 export const dynamic = 'force-dynamic'
+import type { Metadata } from 'next'
 import styles from './skills.module.css'
+
+export const metadata: Metadata = {
+  title: 'Skills',
+  description: 'Technical skills, technologies, and expertise — frontend, backend, database, DevOps, and automation.',
+}
 import { SkillModel } from '@/lib/models/SkillModel'
 
 const proficiencyLabel: Record<string, string> = {

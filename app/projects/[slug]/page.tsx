@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -9,6 +10,23 @@ import styles from './page.module.css'
 import RichText from '@/components/ui/RichText'
 
 interface Props { params: Promise<{ slug: string }> }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const project = await ProjectModel.findBySlug(slug)
+  if (!project) return {}
+  return {
+    title: project.title,
+    description: project.description,
+    openGraph: {
+      title: `${project.title} | Franca Uvere`,
+      description: project.description,
+      images: project.imageUrl
+        ? [{ url: project.imageUrl, width: 1200, height: 630 }]
+        : [{ url: '/api/og?title=' + encodeURIComponent(project.title) }],
+    },
+  }
+}
 
 export default async function ProjectDetailPage({ params }: Props) {
   const { slug } = await params
