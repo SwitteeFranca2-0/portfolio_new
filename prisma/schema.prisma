@@ -21,6 +21,7 @@ model Bio {
   photoUrl        String?
   resumeUrl       String?
   backgroundStyle String  @default("laptop")   // "laptop" | "particles"
+  demoMode        Boolean @default(false)
 }
 
 // ── Projects ─────────────────────────────────────────────────────────────────

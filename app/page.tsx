@@ -1,5 +1,4 @@
 export const dynamic = 'force-dynamic'
-import { DEMO_MODE } from '@/lib/demo'
 import * as DemoData from '@/lib/data'
 import { BioModel }           from '@/lib/models/BioModel'
 import { ContactModel }       from '@/lib/models/ContactModel'
@@ -12,31 +11,37 @@ import { CertificationModel } from '@/lib/models/CertificationModel'
 import { ServiceModel }       from '@/lib/models/ServiceModel'
 import { StatModel }          from '@/lib/models/StatModel'
 
-const BIO_FALLBACK = { name: 'Franca Uvere', headline: '', tagline: '', typedRole: '', location: '', availability: '', responseTime: '', photoUrl: null, resumeUrl: null, backgroundStyle: 'laptop' }
+const BIO_FALLBACK     = { name: 'Portfolio', headline: '', tagline: '', typedRole: '', location: '', availability: '', responseTime: '', photoUrl: null, resumeUrl: null, backgroundStyle: 'laptop', demoMode: false }
 const CONTACT_FALLBACK = { email: '', github: null, linkedin: null, instagram: null, whatsapp: null }
-import GlobalBackground from '@/components/three/GlobalBackground'
-import Hero from '@/components/home/Hero'
-import Marquee from '@/components/home/Marquee'
-import Stats from '@/components/home/Stats'
-import Skills from '@/components/home/Skills'
-import Services from '@/components/home/Services'
-import Projects from '@/components/home/Projects'
-import Experience from '@/components/home/Experience'
-import Education from '@/components/home/Education'
-import Certifications from '@/components/home/Certifications'
-import Testimonials from '@/components/home/Testimonials'
-import Contact from '@/components/home/Contact'
+
+import GlobalBackground  from '@/components/three/GlobalBackground'
+import Hero              from '@/components/home/Hero'
+import Marquee           from '@/components/home/Marquee'
+import Stats             from '@/components/home/Stats'
+import Skills            from '@/components/home/Skills'
+import Services          from '@/components/home/Services'
+import Projects          from '@/components/home/Projects'
+import Experience        from '@/components/home/Experience'
+import Education         from '@/components/home/Education'
+import Certifications    from '@/components/home/Certifications'
+import Testimonials      from '@/components/home/Testimonials'
+import Contact           from '@/components/home/Contact'
 
 export default async function Home() {
-  if (DEMO_MODE) {
-    const bio = { ...DemoData.bio, backgroundStyle: 'particles' }
-    const contact = DemoData.contact
+  // Always fetch bio first to check demoMode flag
+  const bioRaw = await BioModel.get().catch(() => null)
+  const bio    = bioRaw ?? BIO_FALLBACK
+
+  // If demo mode is on, serve lib/data.ts placeholder content
+  if (bio.demoMode) {
+    const demoContact = DemoData.contact
+    const demoBio     = { ...DemoData.bio, backgroundStyle: bio.backgroundStyle ?? 'particles', demoMode: true }
 
     return (
       <>
-        <GlobalBackground style={bio.backgroundStyle} />
+        <GlobalBackground style={demoBio.backgroundStyle} />
         <main style={{ position: 'relative', zIndex: 1 }}>
-          <Hero bio={bio} techBadges={DemoData.marqueeItems} />
+          <Hero bio={demoBio} techBadges={DemoData.marqueeItems} />
           <Marquee items={DemoData.marqueeItems} />
           <Stats stats={[]} />
           <Skills skills={DemoData.skills} />
@@ -46,26 +51,17 @@ export default async function Home() {
           <Education education={[]} />
           <Certifications certifications={[]} />
           <Testimonials testimonials={[]} />
-          <Contact bio={bio} contact={contact} />
+          <Contact bio={demoBio} contact={demoContact} />
         </main>
       </>
     )
   }
 
+  // Live mode — fetch all content from DB
   const [
-    bioRaw,
-    contactRaw,
-    skills,
-    projects,
-    experiences,
-    marqueeItems,
-    education,
-    testimonials,
-    certifications,
-    services,
-    stats,
+    contactRaw, skills, projects, experiences, marqueeItems,
+    education, testimonials, certifications, services, stats,
   ] = await Promise.all([
-    BioModel.get(),
     ContactModel.get(),
     SkillModel.findAll(),
     ProjectModel.findAll(),
@@ -77,7 +73,6 @@ export default async function Home() {
     ServiceModel.findAll(),
     StatModel.findAll(),
   ])
-  const bio = bioRaw ?? BIO_FALLBACK
   const contact = contactRaw ?? CONTACT_FALLBACK
 
   return (

@@ -1,18 +1,20 @@
 import { ProjectModel }    from '@/lib/models/ProjectModel'
 import { SkillModel }      from '@/lib/models/SkillModel'
 import { ExperienceModel } from '@/lib/models/ExperienceModel'
-import { DEMO_MODE } from '@/lib/demo'
+import { BioModel }        from '@/lib/models/BioModel'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
-  const [projectCount, skillCount, expCount, recentProjects] = await Promise.all([
+  const [projectCount, skillCount, expCount, recentProjects, bio] = await Promise.all([
     ProjectModel.count(),
     SkillModel.count(),
     ExperienceModel.count(),
     ProjectModel.findRecent(5),
+    BioModel.get(),
   ])
+  const demoMode = bio?.demoMode ?? false
 
   return (
     <div>
@@ -49,22 +51,22 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Demo Mode Status */}
-      <div className="ar-card" style={{ borderColor: DEMO_MODE ? 'rgba(123,94,167,.4)' : 'rgba(255,255,255,.06)' }}>
+      <div className="ar-card" style={{ borderColor: demoMode ? 'rgba(123,94,167,.4)' : 'rgba(255,255,255,.06)' }}>
         <div className="ar-card-t">Data Mode</div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span className={`ar-badge ${DEMO_MODE ? 'ar-ba-b' : 'ar-ba-t'}`}>
-              {DEMO_MODE ? 'Demo Mode' : 'Live Data'}
+            <span className={`ar-badge ${demoMode ? 'ar-ba-b' : 'ar-ba-t'}`}>
+              {demoMode ? 'Demo Mode' : 'Live Data'}
             </span>
             <span style={{ fontSize: 13, color: 'var(--adm-text-2)' }}>
-              {DEMO_MODE
+              {demoMode
                 ? 'Public site shows sample data from lib/data.ts'
                 : 'Public site reads from the database'}
             </span>
           </div>
-          {DEMO_MODE && (
+          {demoMode && (
             <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 11, color: 'var(--adm-text-3)' }}>
-              Remove DEMO_MODE=true from .env to go live
+              Remove demoMode=true from .env to go live
             </span>
           )}
         </div>

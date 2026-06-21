@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import './globals.css'
 import PublicShell from '@/components/layout/PublicShell'
 import { BioModel } from '@/lib/models/BioModel'
-import { DEMO_MODE } from '@/lib/demo'
 import DemoBanner from '@/components/ui/DemoBanner'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -38,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-const BIO_FALLBACK = { name: 'Franca Uvere', resumeUrl: null as string | null }
+const BIO_FALLBACK = { name: 'Portfolio', resumeUrl: null as string | null, demoMode: false }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const bio = await BioModel.get().catch(() => null) ?? BIO_FALLBACK
@@ -56,7 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <PublicShell bio={bio}>
           {children}
         </PublicShell>
-        {DEMO_MODE && <DemoBanner />}
+        {bio.demoMode && <DemoBanner />}
       </body>
     </html>
   )

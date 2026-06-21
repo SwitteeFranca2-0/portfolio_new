@@ -1,262 +1,183 @@
-# Franca Uvere — Portfolio
+# Portfolio — Next.js 16 + Prisma + PostgreSQL
 
-A personal portfolio and CMS built with Next.js, featuring 3D visuals, a full admin dashboard, and a custom data layer on PostgreSQL.
+A fully featured personal portfolio with a CMS-style admin panel. All content is stored in a database and managed from `/admin` — no hardcoding required. Clone it, seed it, make it yours.
 
-**Live site:** [franca-uvere.vercel.app](https://franca-uvere.vercel.app)
+## Stack
 
----
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript (strict) |
+| ORM | Prisma 7 |
+| Database | PostgreSQL (Railway or any provider) |
+| Auth | Custom JWT (bcrypt + pg) |
+| File Storage | Local / S3-compatible / Supabase Storage |
+| Email | Resend |
+| 3D Background | Three.js |
+| Rich Text | Tiptap |
 
-## ✨ Features
+## Features
 
-- **3D Hero** — Interactive Three.js scenes (laptop or particle background), switchable from the admin panel
-- **Dynamic Sections** — Typewriter hero, tech marquee, skills with proficiency bars, project showcase with category filtering, experience timeline, and contact form
-- **Project Detail Pages** — Rich text body, tech stack chips, feature lists, media gallery, and automation metadata (for n8n workflows)
-- **Admin CMS** — Full content management dashboard for bio, contact info, projects, skills, experience, and file uploads
-- **Custom Auth** — JWT-based admin authentication (jose + bcryptjs) with edge-safe middleware
-- **Dual Upload System** — Store files locally or in Supabase Storage, toggled via environment config
-- **Custom Cursor & Scroll Animations** — Intersection observer–driven reveals and a bespoke cursor
-- **Dark Theme** — Designed around deep blacks with accent colors (purple, coral, teal)
-
----
-
-## 🛠 Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Framework | [Next.js 16](https://nextjs.org) (App Router, RSC) |
-| Language | TypeScript 5 |
-| Database | PostgreSQL (Railway) via [Prisma 7](https://www.prisma.io) with `@prisma/adapter-pg` |
-| Auth | Custom JWT (jose) + bcryptjs |
-| Storage | Local filesystem or [Supabase Storage](https://supabase.com) |
-| 3D Graphics | [Three.js](https://threejs.org) |
-| Rich Text | [TipTap](https://tiptap.dev) (v3) |
-| Styling | Tailwind CSS v4 + CSS Modules + design tokens |
-| Deployment | [Vercel](https://vercel.com) |
+- **DB-driven content** — bio, projects, skills, experience, education, services, testimonials, certifications, stats, contact — all managed from `/admin`
+- **Two 3D backgrounds** — scroll-driven laptop animation or atmospheric particle field, switchable from admin
+- **Demo mode** — one toggle in the admin serves placeholder data from `lib/data.ts` — great for previewing before your content is ready
+- **Flexible file uploads** — local, S3-compatible (AWS/R2/MinIO/Spaces/Backblaze), or Supabase Storage — auto-detected from env vars
+- **Contact form** — sends real emails via Resend
+- **SEO** — dynamic Open Graph images (with your profile photo), sitemap.xml, robots.txt
+- **Responsive** — mobile hamburger nav, breakpoints at 640px and 900px
 
 ---
 
-## 📁 Project Structure
+## Quick Start
 
-```
-my_portfolio/
-├── app/
-│   ├── page.tsx                  # Home (Hero → Marquee → Skills → Projects → Experience → Contact)
-│   ├── layout.tsx                # Root layout (fetches Bio, renders PublicShell)
-│   ├── globals.css               # Design tokens & global styles
-│   ├── skills/                   # Skills page
-│   ├── projects/                 # Project listing + [slug] detail pages
-│   ├── contact/                  # Contact page
-│   ├── admin/                    # Admin CMS dashboard
-│   │   ├── layout.tsx            # Admin shell (Sidebar + Topbar)
-│   │   ├── login/                # Admin login
-│   │   ├── bio/                  # Bio editor
-│   │   ├── contact/             # Contact editor
-│   │   ├── projects/             # Project CRUD (list, new, edit)
-│   │   ├── skills/               # Skill CRUD (list, edit)
-│   │   └── experience/           # Experience CRUD (list, edit)
-│   └── api/admin/                # API routes (auth, CRUD, uploads)
-├── components/
-│   ├── admin/                    # MediaUpload, RichTextEditor, Sidebar, Topbar
-│   ├── home/                     # Hero, Marquee, Skills, Projects, Experience, Contact sections
-│   ├── layout/                   # Nav, Footer, Cursor, PublicShell, ScrollReveal
-│   ├── projects/                 # MediaGallery
-│   ├── three/                    # HeroScene, HeroSceneLaptop, HeroSceneParticles, GlobalBackground
-│   └── ui/                       # Chip, RichText, SectionHeader, Typewriter
-├── lib/
-│   ├── auth.ts                   # JWT sign/verify, bcrypt, pg pool
-│   ├── auth-edge.ts              # Edge-safe JWT verify (for middleware)
-│   ├── prisma.ts                 # Prisma client singleton
-│   ├── supabase.ts               # Supabase server client
-│   ├── supabase-client.ts        # Supabase browser client
-│   └── models/                   # BaseModel, BioModel, ContactModel, ExperienceModel, ProjectModel, SkillModel
-├── prisma/
-│   ├── schema.prisma             # 17-model database schema
-│   ├── seed.ts                   # Realistic portfolio seed data
-│   └── migrations/               # Database migrations
-├── scripts/
-│   └── migrate-uploads-to-s3.ts  # Local → Supabase Storage migration
-└── public/uploads/                # Local file uploads
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm
-- PostgreSQL database
-
-### 1. Clone & Install
+### 1. Clone and install
 
 ```bash
-git clone https://github.com/franca-uvere/portfolio.git
-cd portfolio/my_portfolio
+git clone https://github.com/SwitteeFranca2-0/portfolio_new.git my-portfolio
+cd my-portfolio
 npm install
 ```
 
-### 2. Configure Environment
-
-Create a `.env` file in `my_portfolio/` (see available variables below):
-
-```env
-DATABASE_URL="postgresql://user:password@host:5432/db?schema=portfolio"
-DIRECT_URL="postgresql://user:password@host:5432/db?schema=portfolio"
-
-# Supabase (for cloud storage — optional if using local uploads)
-NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
-
-# Upload mode: "local" or "online"
-NEXT_PUBLIC_UPLOAD_BUCKET="local"
-UPLOAD_BUCKET="local"
-
-# Supabase Storage (required if UPLOAD_BUCKET=online)
-AWS_ACCESS_KEY_ID="your-access-key"
-AWS_SECRET_ACCESS_KEY="your-secret-key"
-BUCKET_NAME="portfolio"
-REGION="us-west-1"
-S3_ENDPOINT="https://your-project.supabase.co/storage/v1/s3"
-
-# Admin auth
-JWT_SECRET="your-jwt-secret"
-```
-
-### 3. Set Up the Database
+### 2. Configure environment
 
 ```bash
-# Run migrations
-npx prisma migrate deploy
-
-# Seed with sample data
-npm run seed
+cp .env.example .env
 ```
 
-### 4. Run the Dev Server
+Fill in `.env`. At minimum you need `DATABASE_URL` and `JWT_SECRET`. See `.env.example` for the full reference.
+
+### 3. Set up the database
+
+```bash
+npx prisma db push        # create all tables
+npx tsx prisma/seed.ts    # seed with starter content
+```
+
+### 4. Create your admin account
+
+```bash
+npx tsx -e "
+import 'dotenv/config'
+import { Pool } from 'pg'
+import bcrypt from 'bcryptjs'
+import { randomUUID } from 'crypto'
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: false })
+const hash = bcrypt.hashSync('YourPasswordHere', 10)
+const now  = new Date().toISOString()
+await pool.query(
+  \`INSERT INTO auth.users
+    (instance_id,id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)
+   VALUES (\\\$1,\\\$2,\\\$3,\\\$4,\\\$5,\\\$6,\\\$7,\\\$8,\\\$9,\\\$10,\\\$10)\`,
+  ['00000000-0000-0000-0000-000000000000', randomUUID(), 'authenticated', 'authenticated',
+   'you@email.com', hash, now, JSON.stringify({provider:'email',providers:['email']}), '{}', now]
+)
+await pool.end()
+console.log('Admin account created')
+"
+```
+
+### 5. Run
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the portfolio.
-
-### 5. Access the Admin
-
-Navigate to `/admin/login`. Default credentials are set up in the seed script — check `prisma/seed.ts` for details.
+- Portfolio: [http://localhost:3000](http://localhost:3000)
+- Admin: [http://localhost:3000/admin](http://localhost:3000/admin)
 
 ---
 
-## 📜 Available Scripts
+## Demo Mode
 
-| Script | Command | Description |
-|--------|---------|-------------|
-| `dev` | `npm run dev` | Start Next.js development server |
-| `build` | `npm run build` | Production build |
-| `start` | `npm run start` | Start production server |
-| `lint` | `npm run lint` | Run ESLint |
-| `seed` | `npm run seed` | Seed database with portfolio data |
+Not ready to populate real content yet? Go to **Admin → Bio → Demo Mode** and turn it on. The public site immediately switches to the generic placeholder data in `lib/data.ts`. Turn it off when you're ready to go live — no restart needed.
 
-**Manual scripts:**
+---
 
-```bash
-# Migrate local uploads to Supabase Storage
-npx tsx scripts/migrate-uploads-to-s3.ts
+## File Storage
+
+Three options, auto-detected from your env vars:
+
+| Option | How to activate |
+|---|---|
+| **Local** (default) | No extra config. Files go to `public/uploads/`, served at `/uploads/`. |
+| **S3-compatible** | Set `IS_S3_ENDPOINT=true` + S3 credentials. Works with AWS S3, Cloudflare R2, MinIO, DigitalOcean Spaces, Backblaze B2. |
+| **Supabase Storage** | Set `S3_ENDPOINT` to your Supabase storage URL + `JWT_SECRET`. Do **not** set `IS_S3_ENDPOINT`. |
+
+See `.env.example` for the exact variable names.
+
+---
+
+## Deploying
+
+### Vercel (recommended)
+
+1. Push to GitHub
+2. Import at [vercel.com](https://vercel.com)
+3. Add all env vars from `.env.example`
+4. Deploy
+
+After deploying, update these three files with your real domain:
+- `app/layout.tsx` — `metadataBase`
+- `app/sitemap.ts` — `BASE` constant
+- `app/robots.ts` — `sitemap` URL
+
+---
+
+## Project Structure
+
+```
+app/
+├── admin/           ← protected admin panel (bio, projects, skills, etc.)
+├── api/             ← API routes (CRUD, uploads, contact form, OG image)
+├── page.tsx         ← public landing page
+├── projects/        ← /projects listing + /projects/[slug] detail
+├── skills/          ← /skills page
+└── contact/         ← /contact page
+
+components/
+├── home/            ← landing page sections (Hero, Skills, Projects, etc.)
+├── admin/           ← admin UI (Sidebar, Topbar, MediaUpload, RichTextEditor)
+├── layout/          ← Nav, Footer, Cursor, PublicShell
+├── three/           ← Three.js scenes (laptop journey + particle field)
+└── ui/              ← shared primitives (Chip, SectionHeader, RichText, etc.)
+
+lib/
+├── models/          ← OOP model layer (BaseModel → BioModel, ProjectModel, etc.)
+├── data.ts          ← demo placeholder data (shown in demo mode)
+├── auth.ts          ← JWT sign/verify
+├── auth-edge.ts     ← Edge-runtime JWT verify (used by proxy.ts)
+└── prisma.ts        ← Prisma client singleton
+
+prisma/
+├── schema.prisma    ← full database schema (20+ models)
+└── seed.ts          ← populates DB with starter content
+
+scripts/
+└── migrate-uploads-to-s3.ts  ← migrates local uploads to cloud storage
 ```
 
 ---
 
-## 🗄 Database
+## Content Types
 
-The schema lives in `prisma/schema.prisma` and covers **17 models**:
+Managed entirely from the admin panel:
 
-| Model | Purpose |
-|-------|---------|
-| `Bio` | Singleton — name, headline, tagline, photo, resume, background style |
-| `Contact` | Singleton — email, socials, availability |
-| `Project` | Portfolio projects with slug, type, stack, features, media, automation details |
-| `ProjectCategory` | Project type categories |
-| `ProjectStack` | Tech stack entries per project |
-| `ProjectFeature` | Feature highlights per project |
-| `ProjectMedia` | Images/videos per project |
-| `AutomationDetails` | n8n automation metadata (tool, trigger, workflow, time saved) |
-| `AutomationIntegration` | Services connected by an automation |
-| `Skill` | Skill groups with icon and proficiency |
-| `SkillItem` | Individual items within a skill group |
-| `Experience` | Work experience entries |
-| `ExperienceTag` | Tags on experience entries |
-| `Education` | Education history |
-| `Testimonial` | Client/colleague testimonials |
-| `Certification` | Professional certifications |
-| `Service` | Services offered |
-
-All models use a `portfolio` schema namespace. Migrations are managed via Prisma.
+| Section | Admin page |
+|---|---|
+| Bio, photo, resume, typed role | `/admin/bio` |
+| Projects (with media gallery) | `/admin/projects` |
+| Skills & technologies | `/admin/skills` |
+| Work experience | `/admin/experience` |
+| Education | `/admin/education` |
+| Services offered | `/admin/services` |
+| Testimonials | `/admin/testimonials` |
+| Certifications | `/admin/certifications` |
+| Stats / numbers | `/admin/stats` |
+| Contact info & socials | `/admin/contact` |
 
 ---
 
-## 🎨 Design System
+## License
 
-The portfolio uses CSS custom properties for theming, defined in `app/globals.css`:
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--bg` | `#060608` | Page background |
-| `--acc` | `#7B5EA7` | Primary accent (purple) |
-| `--acc2` | `#E85D75` | Secondary accent (coral) |
-| `--acc3` | `#3ECFCF` | Tertiary accent (teal) |
-| `--font-display` | Bebas Neue | Headings |
-| `--font-body` | DM Sans | Body text |
-| `--font-mono` | DM Mono | Code & labels |
-
----
-
-## 🔐 Authentication
-
-Admin auth is a custom implementation:
-
-- **Login** — POST `/api/admin/auth/login` verifies credentials against `auth.users` (bcryptjs), returns an HTTP-only cookie (`admin_session`) containing a signed JWT (jose, HS256, 7-day expiry)
-- **Middleware** — `proxy.ts` verifies the JWT on every `/admin/*` and `/api/admin/*` route (except `/admin/login` and `/api/admin/auth/login`)
-- **Edge-safe verification** — `lib/auth-edge.ts` provides JWT verification without Node.js-specific APIs for use in middleware
-- **Logout** — POST `/api/admin/auth/logout` clears the cookie
-
----
-
-## ☁️ Upload System
-
-Files can be stored in two modes, controlled by the `UPLOAD_BUCKET` environment variable:
-
-| Mode | `UPLOAD_BUCKET` | Storage Location |
-|------|----------------|-----------------|
-| **Local** | `"local"` | `public/uploads/` |
-| **Cloud** | `"online"` | Supabase Storage bucket |
-
-Switching modes only requires changing the env var. To migrate existing local uploads to Supabase Storage, run:
-
-```bash
-npx tsx scripts/migrate-uploads-to-s3.ts
-```
-
----
-
-## 🚢 Deployment
-
-The project is deployed on **Vercel**. Push to the main branch to trigger a deployment.
-
-Required environment variables must be set in the Vercel project settings.
-
-For other platforms, the standard Next.js deployment applies:
-
-```bash
-npm run build
-npm run start
-```
-
----
-
-## 📄 License
-
-This project is private and unlicensed. All rights reserved.
-
----
-
-Built by [Franca Chigoziem Uvere](https://franca-uvere.vercel.app) — Full-Stack & Backend Engineer, Lagos Nigeria.
+MIT

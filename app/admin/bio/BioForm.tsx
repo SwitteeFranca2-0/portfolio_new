@@ -16,6 +16,7 @@ type Bio = {
   photoUrl: string | null
   resumeUrl: string | null
   backgroundStyle: string
+  demoMode: boolean
 }
 
 const BG_OPTIONS = [
@@ -45,6 +46,7 @@ export default function BioForm({ bio }: { bio: Bio | null }) {
     photoUrl:        bio?.photoUrl        ?? '',
     resumeUrl:       bio?.resumeUrl       ?? '',
     backgroundStyle: bio?.backgroundStyle ?? 'laptop',
+    demoMode:        bio?.demoMode        ?? false,
   })
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
 
@@ -134,6 +136,41 @@ export default function BioForm({ bio }: { bio: Bio | null }) {
           hint="PDF — shown as download link in nav"
           folder="resume"
         />
+      </div>
+
+      {/* ── Demo Mode ── */}
+      <div className="ar-card" style={{ borderColor: form.demoMode ? 'rgba(123,94,167,.45)' : 'var(--adm-border)' }}>
+        <div className="ar-card-t">Demo Mode</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div>
+            <p style={{ fontSize: 13, color: 'var(--adm-text)', marginBottom: 4 }}>
+              {form.demoMode ? '🔧 Demo mode is ON — visitors see placeholder data' : '✅ Live mode — visitors see your real content'}
+            </p>
+            <p style={{ fontSize: 11, color: 'var(--adm-text-3)', lineHeight: 1.5 }}>
+              When on, the public site shows the generic sample data from <code style={{ background: 'rgba(255,255,255,.06)', padding: '1px 5px', borderRadius: 3, fontSize: 10 }}>lib/data.ts</code> instead of your database content.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setForm(f => ({ ...f, demoMode: !f.demoMode }))}
+            style={{
+              flexShrink: 0,
+              padding: '8px 20px',
+              border: `1px solid ${form.demoMode ? 'rgba(123,94,167,.5)' : 'var(--adm-border-hi)'}`,
+              borderRadius: 8,
+              background: form.demoMode ? 'rgba(123,94,167,.15)' : 'transparent',
+              color: form.demoMode ? '#9966ff' : 'var(--adm-text-2)',
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 11,
+              letterSpacing: '.08em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              transition: 'all .15s',
+            }}
+          >
+            {form.demoMode ? 'Turn Off' : 'Turn On'}
+          </button>
+        </div>
       </div>
 
       {/* ── Background Style ── */}
