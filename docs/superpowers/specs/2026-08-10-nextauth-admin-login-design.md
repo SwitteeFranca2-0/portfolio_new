@@ -1,5 +1,7 @@
 # NextAuth Admin Login — Design
 
+> **Status: Implemented.** See `docs/superpowers/plans/2026-08-10-nextauth-admin-login.md`.
+
 ## Context
 
 The admin panel (`/admin/**`) is currently protected by a hand-rolled JWT/cookie
