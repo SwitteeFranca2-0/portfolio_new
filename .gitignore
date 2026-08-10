@@ -4,3 +4,4 @@ node_modules/
 lib/generated/
 .superpowers/
 public/uploads/
+.worktrees/
