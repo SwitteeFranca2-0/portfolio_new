@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 
 const s = {
   page:    { minHeight:'100vh', background:'#080b0f', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'DM Sans',sans-serif" } as React.CSSProperties,
@@ -46,18 +47,13 @@ export default function AdminLoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    const res = await fetch('/api/admin/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
-    if (res.ok) {
+    const result = await signIn('credentials', { email, password, redirect: false })
+    if (result?.error) {
+      setError('Invalid email or password')
+      setLoading(false)
+    } else {
       router.push('/admin')
       router.refresh()
-    } else {
-      const data = await res.json()
-      setError(data.error ?? 'Login failed')
-      setLoading(false)
     }
   }
 

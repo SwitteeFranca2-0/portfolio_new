@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 
 const navItems = [
   { href: '/admin',                 label: 'Dashboard',      icon: '⬡' },
@@ -19,12 +20,8 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname()
-  const router   = useRouter()
 
-  const handleSignOut = async () => {
-    await fetch('/api/admin/auth/logout', { method: 'POST' })
-    router.push('/admin/login')
-  }
+  const handleSignOut = () => signOut({ callbackUrl: '/admin/login' })
 
   return (
     <aside className="ar-side">
