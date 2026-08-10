@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { signOut } from 'next-auth/react'
 
 export default function SettingsForm({ currentEmail }: { currentEmail: string }) {
   const [pwForm, setPwForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' })
@@ -37,6 +38,34 @@ export default function SettingsForm({ currentEmail }: { currentEmail: string })
     }
   }
 
+  const [emailForm, setEmailForm] = useState({ password: '', newEmail: currentEmail })
+  const [emailStatus, setEmailStatus] = useState<'idle'|'saving'|'saved'|'error'>('idle')
+  const [emailError, setEmailError] = useState('')
+
+  const setEmailField = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setEmailForm(f => ({ ...f, [e.target.name]: e.target.value }))
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setEmailStatus('saving')
+    setEmailError('')
+    const res = await fetch('/api/admin/settings/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: emailForm.password, newEmail: emailForm.newEmail }),
+    })
+    if (res.ok) {
+      // The current session JWT still carries the old email — force a fresh
+      // sign-in so the next session reflects the change.
+      await signOut({ callbackUrl: '/admin/login' })
+    } else {
+      const data = await res.json().catch(() => null)
+      setEmailError(data?.error ?? 'Failed to update email')
+      setEmailStatus('error')
+      setTimeout(() => { setEmailStatus('idle'); setEmailError('') }, 6000)
+    }
+  }
+
   return (
     <>
       <div className="ar-card">
@@ -70,6 +99,32 @@ export default function SettingsForm({ currentEmail }: { currentEmail: string })
           <button type="submit" className="ar-btn ar-btn-p" disabled={pwStatus === 'saving'}>
             {pwStatus === 'saving' ? 'Saving...' : 'Update Password'}
           </button>
+        </form>
+      </div>
+      <div className="ar-card">
+        <div className="ar-card-t">Change Email</div>
+        {emailStatus === 'error' && <div className="ar-er">{emailError || 'Save failed'}</div>}
+        <form onSubmit={handleEmailSubmit}>
+          <div className="ar-field">
+            <label className="ar-label">Current Password</label>
+            <input
+              name="password" type="password" className="ar-input"
+              value={emailForm.password} onChange={setEmailField} required autoComplete="current-password"
+            />
+          </div>
+          <div className="ar-field">
+            <label className="ar-label">New Email</label>
+            <input
+              name="newEmail" type="email" className="ar-input"
+              value={emailForm.newEmail} onChange={setEmailField} required autoComplete="email"
+            />
+          </div>
+          <button type="submit" className="ar-btn ar-btn-p" disabled={emailStatus === 'saving'}>
+            {emailStatus === 'saving' ? 'Saving...' : 'Update Email'}
+          </button>
+          <p style={{ fontSize: '.75rem', color: '#6b6880', marginTop: '.5rem' }}>
+            You'll be signed out after this to refresh your session with the new email.
+          </p>
         </form>
       </div>
     </>
