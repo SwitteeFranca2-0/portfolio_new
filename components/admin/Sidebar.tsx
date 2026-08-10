@@ -16,6 +16,8 @@ const navItems = [
   { href: '/admin/certifications',  label: 'Certifications', icon: '◻' },
   { href: '/admin/stats',           label: 'Stats',          icon: '◆' },
   { href: '/admin/contact',         label: 'Contact',        icon: '◎' },
+  { section: 'Account' },
+  { href: '/admin/settings',        label: 'Settings',       icon: '⚙' },
 ]
 
 export default function Sidebar() {
