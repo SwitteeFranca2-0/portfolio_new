@@ -1,25 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken, COOKIE_NAME } from '@/lib/auth-edge'
+import NextAuth from 'next-auth'
+import { authConfig } from '@/lib/auth.config'
 
-export async function proxy(req: NextRequest) {
-  const { pathname } = req.nextUrl
-
-  if (!pathname.startsWith('/admin') || pathname === '/admin/login') {
-    return NextResponse.next()
-  }
-
-  const token = req.cookies.get(COOKIE_NAME)?.value
-  if (!token) {
-    return NextResponse.redirect(new URL('/admin/login', req.url))
-  }
-
-  const payload = await verifyAdminToken(token)
-  if (!payload) {
-    return NextResponse.redirect(new URL('/admin/login', req.url))
-  }
-
-  return NextResponse.next()
-}
+export const { auth: proxy } = NextAuth(authConfig)
 
 export const config = {
   matcher: ['/admin/:path*'],
