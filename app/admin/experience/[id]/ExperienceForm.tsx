@@ -2,26 +2,34 @@
 import { useState } from 'react'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 
-type Experience = { id: number; company: string; role: string; startDate: string; endDate?: string | null; description: string; order: number; tags: { name: string }[] }
+type Experience = {
+  id: number; company: string; role: string; startDate: string; endDate?: string | null
+  description: string; showOnHomepage: boolean; order: number; tags: { name: string }[]
+}
 
 export default function ExperienceForm({ experience }: { experience: Experience }) {
   const [form, setForm] = useState({
-    company:     experience.company,
-    role:        experience.role,
-    startDate:   experience.startDate,
-    endDate:     experience.endDate ?? '',
-    description: experience.description,
-    order:       experience.order,
+    company:        experience.company,
+    role:           experience.role,
+    startDate:      experience.startDate,
+    endDate:        experience.endDate ?? '',
+    description:    experience.description,
+    showOnHomepage: experience.showOnHomepage,
+    order:          experience.order,
   })
   const [tags, setTags] = useState(experience.tags.map(t => t.name).join(', '))
   const [status, setStatus] = useState<'idle'|'saving'|'saved'|'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
 
-  const set = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) =>
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+  const set = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+    const val = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value
+    setForm(f => ({ ...f, [e.target.name]: val }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('saving')
+    setErrorMsg('')
     const res = await fetch(`/api/admin/experience/${experience.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -32,14 +40,21 @@ export default function ExperienceForm({ experience }: { experience: Experience 
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
       }),
     })
-    setStatus(res.ok ? 'saved' : 'error')
-    setTimeout(() => setStatus('idle'), 3000)
+    if (res.ok) {
+      setStatus('saved')
+      setTimeout(() => setStatus('idle'), 3000)
+    } else {
+      const data = await res.json().catch(() => null)
+      setErrorMsg(data?.error ?? 'Save failed')
+      setStatus('error')
+      setTimeout(() => { setStatus('idle'); setErrorMsg('') }, 6000)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit}>
       {status === 'saved' && <div className="ar-ok">Saved</div>}
-      {status === 'error'  && <div className="ar-er">Save failed</div>}
+      {status === 'error'  && <div className="ar-er">{errorMsg || 'Save failed'}</div>}
 
       <div className="ar-card">
         <div className="ar-card-t">Position</div>
@@ -77,6 +92,17 @@ export default function ExperienceForm({ experience }: { experience: Experience 
           <label className="ar-label">Tags (comma-separated)</label>
           <input className="ar-input" value={tags} onChange={e => setTags(e.target.value)} placeholder="React, Python, Node.js" />
         </div>
+      </div>
+
+      <div className="ar-card">
+        <div className="ar-card-t">Landing Page</div>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '.75rem', cursor: 'pointer' }}>
+          <input type="checkbox" name="showOnHomepage" checked={form.showOnHomepage} onChange={set} />
+          <span style={{ fontSize: '.875rem', color: '#e8e6f0' }}>Show on homepage</span>
+        </label>
+        <p style={{ fontSize: '.75rem', color: '#6b6880', marginTop: '.5rem' }}>
+          Up to 3 experience entries can show on the homepage at once. The rest are still visible on the full Experience page.
+        </p>
       </div>
 
       <button type="submit" className="ar-btn ar-btn-p" disabled={status === 'saving'}>

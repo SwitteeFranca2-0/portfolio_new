@@ -11,7 +11,7 @@ export default async function AdminExperiencePage() {
       <div className="ar-ph">
         <div>
           <div className="ar-title">Experience</div>
-          <div className="ar-sub">Work history displayed on the landing page</div>
+          <div className="ar-sub">Full work history — up to 3 entries can also show on the homepage</div>
         </div>
       </div>
 
@@ -26,6 +26,7 @@ export default async function AdminExperiencePage() {
                 <th>Company</th>
                 <th>Period</th>
                 <th>Tags</th>
+                <th>Homepage</th>
                 <th></th>
               </tr>
             </thead>
@@ -40,6 +41,7 @@ export default async function AdminExperiencePage() {
                   <td style={{ fontSize: '.72rem', color: '#6b6880' }}>
                     {exp.tags.map(t => t.name).join(', ')}
                   </td>
+                  <td>{exp.showOnHomepage && <span className="ar-badge ar-ba-t">Homepage</span>}</td>
                   <td>
                     <Link
                       href={`/admin/experience/${exp.id}`}

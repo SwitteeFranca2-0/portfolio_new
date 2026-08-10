@@ -26,7 +26,7 @@ export default function Nav({ bio }: { bio: NavBio }) {
         <li><Link href="/">Home</Link></li>
         <li><Link href="/skills">Skills</Link></li>
         <li><Link href="/projects">Projects</Link></li>
-        <li><a href="/#experience">Experience</a></li>
+        <li><Link href="/experience">Experience</Link></li>
         <li><Link href="/contact">Contact</Link></li>
       </ul>
       <a href={bio.resumeUrl ?? undefined} className={styles.cta} target="_blank" rel="noopener noreferrer">
@@ -42,7 +42,7 @@ export default function Nav({ bio }: { bio: NavBio }) {
           <Link href="/" className={styles.drawerLink} onClick={() => setMenuOpen(false)}>Home</Link>
           <Link href="/skills" className={styles.drawerLink} onClick={() => setMenuOpen(false)}>Skills</Link>
           <Link href="/projects" className={styles.drawerLink} onClick={() => setMenuOpen(false)}>Projects</Link>
-          <a href="/#experience" className={styles.drawerLink} onClick={() => setMenuOpen(false)}>Experience</a>
+          <Link href="/experience" className={styles.drawerLink} onClick={() => setMenuOpen(false)}>Experience</Link>
           <Link href="/contact" className={styles.drawerLink} onClick={() => setMenuOpen(false)}>Contact</Link>
           <a href={bio.resumeUrl ?? undefined} className={styles.drawerCta} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>Resume ↗</a>
         </div>

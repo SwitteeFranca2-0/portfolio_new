@@ -118,25 +118,27 @@ model Skill {
 }
 
 model SkillItem {
-  id        Int     @id @default(autoincrement())
-  skill     Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
-  skillId   Int
-  name      String
-  highlight Boolean @default(false)
-  order     Int     @default(0)
+  id         Int     @id @default(autoincrement())
+  skill      Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  skillId    Int
+  name       String
+  highlight  Boolean @default(false)
+  showInHero Boolean @default(false)
+  order      Int     @default(0)
 }
 
 // ── Experience ────────────────────────────────────────────────────────────────
 
 model Experience {
-  id          Int             @id @default(autoincrement())
-  company     String
-  role        String
-  startDate   String
-  endDate     String?
-  description String
-  order       Int             @default(0)
-  tags        ExperienceTag[]
+  id             Int             @id @default(autoincrement())
+  company        String
+  role           String
+  startDate      String
+  endDate        String?
+  description    String
+  showOnHomepage Boolean         @default(false)
+  order          Int             @default(0)
+  tags           ExperienceTag[]
 }
 
 model ExperienceTag {

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styles from './Experience.module.css'
 import SectionHeader from '@/components/ui/SectionHeader'
 import RichText from '@/components/ui/RichText'
@@ -30,6 +31,12 @@ export default function Experience({ experiences }: { experiences: Experience[] 
             </div>
           </div>
         ))}
+      </div>
+
+      <div className={styles.viewAll}>
+        <Link href="/experience" className={styles.viewAllLink}>
+          View all experience ↗
+        </Link>
       </div>
     </section>
   )

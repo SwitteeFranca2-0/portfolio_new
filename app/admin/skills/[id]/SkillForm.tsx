@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 
-type SkillItem = { id?: number; name: string; highlight: boolean; order: number }
+type SkillItem = { id?: number; name: string; highlight: boolean; showInHero: boolean; order: number }
 type Skill = { id: number; icon: string; title: string; description: string; proficiency: string; yearsExp?: number | null; items: SkillItem[] }
 
 export default function SkillForm({ skill }: { skill: Skill }) {
@@ -16,11 +16,12 @@ export default function SkillForm({ skill }: { skill: Skill }) {
     skill.items.map((i, idx) => ({ ...i, order: i.order ?? idx }))
   )
   const [status, setStatus] = useState<'idle'|'saving'|'saved'|'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
 
   const set = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) =>
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
-  const addItem = () => setItems(prev => [...prev, { name: '', highlight: false, order: prev.length }])
+  const addItem = () => setItems(prev => [...prev, { name: '', highlight: false, showInHero: false, order: prev.length }])
   const removeItem = (i: number) => setItems(prev => prev.filter((_, j) => j !== i))
   const updateItem = (i: number, patch: Partial<SkillItem>) =>
     setItems(prev => prev.map((item, j) => j === i ? { ...item, ...patch } : item))
@@ -28,19 +29,27 @@ export default function SkillForm({ skill }: { skill: Skill }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('saving')
+    setErrorMsg('')
     const res = await fetch(`/api/admin/skills/${skill.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...form, yearsExp: form.yearsExp ? Number(form.yearsExp) : null, items }),
     })
-    setStatus(res.ok ? 'saved' : 'error')
-    setTimeout(() => setStatus('idle'), 3000)
+    if (res.ok) {
+      setStatus('saved')
+      setTimeout(() => setStatus('idle'), 3000)
+    } else {
+      const data = await res.json().catch(() => null)
+      setErrorMsg(data?.error ?? 'Save failed')
+      setStatus('error')
+      setTimeout(() => { setStatus('idle'); setErrorMsg('') }, 6000)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit}>
       {status === 'saved' && <div className="ar-ok">Saved</div>}
-      {status === 'error'  && <div className="ar-er">Save failed</div>}
+      {status === 'error'  && <div className="ar-er">{errorMsg || 'Save failed'}</div>}
 
       <div className="ar-card">
         <div className="ar-card-t">Skill Details</div>
@@ -76,7 +85,7 @@ export default function SkillForm({ skill }: { skill: Skill }) {
         <div className="ar-card-t">Technologies</div>
         <table className="ar-table" style={{ marginBottom: '1rem' }}>
           <thead>
-            <tr><th>Name</th><th>Highlight (shown teal)</th><th></th></tr>
+            <tr><th>Name</th><th>Highlight (shown teal)</th><th>Show in hero</th><th></th></tr>
           </thead>
           <tbody>
             {items.map((item, i) => (
@@ -96,6 +105,15 @@ export default function SkillForm({ skill }: { skill: Skill }) {
                   </label>
                 </td>
                 <td>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '.5rem', cursor: 'pointer' }}>
+                    <input type="checkbox" checked={item.showInHero}
+                      onChange={e => updateItem(i, { showInHero: e.target.checked })} />
+                    <span style={{ fontSize: '.78rem', color: item.showInHero ? '#3ECFCF' : '#6b6880' }}>
+                      {item.showInHero ? 'In hero' : 'Not in hero'}
+                    </span>
+                  </label>
+                </td>
+                <td>
                   <button type="button" className="ar-btn ar-btn-d" onClick={() => removeItem(i)} style={{ padding: '.3rem .75rem' }}>
                     ×
                   </button>
@@ -105,6 +123,9 @@ export default function SkillForm({ skill }: { skill: Skill }) {
           </tbody>
         </table>
         <button type="button" className="ar-btn ar-btn-o" onClick={addItem}>+ Add Technology</button>
+        <p style={{ fontSize: '.75rem', color: '#6b6880', marginTop: '.75rem' }}>
+          Up to 8 skills across all categories can show in the Hero section marquee.
+        </p>
       </div>
 
       <button type="submit" className="ar-btn ar-btn-p" disabled={status === 'saving'}>

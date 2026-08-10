@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { SkillModel } from '@/lib/models/SkillModel'
+import { SkillModel, SkillValidationError } from '@/lib/models/SkillModel'
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -9,6 +9,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json(skill)
   } catch (e) {
     console.error(e)
+    if (e instanceof SkillValidationError) {
+      return NextResponse.json({ error: e.message }, { status: 400 })
+    }
     return NextResponse.json({ error: 'Failed to save' }, { status: 500 })
   }
 }
