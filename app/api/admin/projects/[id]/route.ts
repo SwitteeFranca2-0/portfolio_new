@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ProjectModel } from '@/lib/models/ProjectModel'
+import { ProjectModel, ProjectValidationError } from '@/lib/models/ProjectModel'
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -9,6 +9,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json(project)
   } catch (e) {
     console.error(e)
+    if (e instanceof ProjectValidationError) {
+      return NextResponse.json({ error: e.message }, { status: 400 })
+    }
     return NextResponse.json({ error: 'Failed to save' }, { status: 500 })
   }
 }

@@ -1,10 +1,11 @@
 import { ProjectModel } from '@/lib/models/ProjectModel'
 import Link from 'next/link'
+import VisibilityToggle from './VisibilityToggle'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminProjectsPage() {
-  const projects = await ProjectModel.findAll()
+  const projects = await ProjectModel.findAll({ includeHidden: true })
 
   return (
     <div>
@@ -28,18 +29,20 @@ export default async function AdminProjectsPage() {
               <th>Year</th>
               <th>Stack</th>
               <th>Sticky</th>
+              <th>Visible</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {projects.map(p => (
-              <tr key={p.id}>
+              <tr key={p.id} style={p.hidden ? { opacity: .55 } : undefined}>
                 <td style={{ fontFamily: "'DM Mono', monospace", fontSize: '.7rem', color: '#6b6880' }}>{p.order + 1}</td>
                 <td style={{ fontWeight: 500 }}>{p.title}</td>
                 <td><span className="ar-badge ar-ba-g">{p.category}</span></td>
                 <td style={{ fontFamily: "'DM Mono', monospace", fontSize: '.7rem', color: '#6b6880' }}>{p.year}</td>
                 <td style={{ fontSize: '.72rem', color: '#6b6880' }}>{p.stack.join(', ')}</td>
                 <td>{p.featured && <span className="ar-badge ar-ba-t">Sticky</span>}</td>
+                <td><VisibilityToggle id={p.id} hidden={p.hidden} /></td>
                 <td>
                   <Link href={`/admin/projects/${p.id}`} style={{ color: '#3ECFCF', fontSize: '.72rem', textDecoration: 'none' }}>Edit →</Link>
                 </td>

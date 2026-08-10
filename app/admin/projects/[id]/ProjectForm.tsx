@@ -8,7 +8,7 @@ type Category = { id: string; label: string; order: number }
 type Project = {
   id: number; slug: string; title: string; type: string; categoryId: string; year: number
   description: string; body: string|null; outcome: string|null; imageUrl: string|null
-  liveUrl: string|null; repoUrl: string|null; featured: boolean; order: number
+  liveUrl: string|null; repoUrl: string|null; featured: boolean; showOnHomepage: boolean; order: number
   stack: { name: string }[]; features: { text: string }[]
   media: { type: string; url: string; caption: string|null }[]
 }
@@ -27,13 +27,15 @@ export default function ProjectForm({ project, categories }: { project: Project;
     imageUrl:    project.imageUrl ?? '',
     liveUrl:     project.liveUrl ?? '',
     repoUrl:     project.repoUrl ?? '',
-    featured:    project.featured,
-    order:       project.order,
+    featured:       project.featured,
+    showOnHomepage: project.showOnHomepage,
+    order:          project.order,
     stack:       project.stack.map(s => s.name).join(', '),
     features:    project.features.map(f => f.text).join('\n'),
     media:       project.media.map(m => ({ type: m.type as 'image'|'video', url: m.url, caption: m.caption ?? '' })),
   })
   const [status, setStatus] = useState<'idle'|'saving'|'saved'|'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
   const [deleteConfirm, setDeleteConfirm] = useState(false)
 
   const set = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => {
@@ -41,9 +43,15 @@ export default function ProjectForm({ project, categories }: { project: Project;
     setForm(f => ({ ...f, [e.target.name]: val }))
   }
 
+  const setFeatured = (checked: boolean) => {
+    // Sticky project always shows on the homepage — locked while featured.
+    setForm(f => ({ ...f, featured: checked, showOnHomepage: checked ? true : f.showOnHomepage }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('saving')
+    setErrorMsg('')
     const res = await fetch(`/api/admin/projects/${project.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -56,8 +64,15 @@ export default function ProjectForm({ project, categories }: { project: Project;
         media: form.media,
       }),
     })
-    setStatus(res.ok ? 'saved' : 'error')
-    setTimeout(() => setStatus('idle'), 3000)
+    if (res.ok) {
+      setStatus('saved')
+      setTimeout(() => setStatus('idle'), 3000)
+    } else {
+      const data = await res.json().catch(() => null)
+      setErrorMsg(data?.error ?? 'Save failed')
+      setStatus('error')
+      setTimeout(() => { setStatus('idle'); setErrorMsg('') }, 6000)
+    }
   }
 
   const handleDelete = async () => {
@@ -69,7 +84,7 @@ export default function ProjectForm({ project, categories }: { project: Project;
   return (
     <form onSubmit={handleSubmit}>
       {status === 'saved' && <div className="ar-ok">Saved</div>}
-      {status === 'error' && <div className="ar-er">Save failed</div>}
+      {status === 'error' && <div className="ar-er">{errorMsg || 'Save failed'}</div>}
 
       <div className="ar-card">
         <div className="ar-card-t">Core Details</div>
@@ -223,11 +238,29 @@ export default function ProjectForm({ project, categories }: { project: Project;
       <div className="ar-card">
         <div className="ar-card-t">Landing Page</div>
         <label style={{ display: 'flex', alignItems: 'center', gap: '.75rem', cursor: 'pointer' }}>
-          <input type="checkbox" name="featured" checked={form.featured} onChange={set} />
+          <input
+            type="checkbox" checked={form.featured}
+            onChange={e => setFeatured(e.target.checked)}
+          />
           <span style={{ fontSize: '.875rem', color: '#e8e6f0' }}>Sticky project — shown large on landing page</span>
         </label>
-        <p style={{ fontSize: '.75rem', color: '#6b6880', marginTop: '.5rem' }}>
+        <p style={{ fontSize: '.75rem', color: '#6b6880', marginTop: '.5rem', marginBottom: '1rem' }}>
           Only one project can be sticky. Enabling this will automatically unset the current sticky project.
+        </p>
+
+        <label style={{ display: 'flex', alignItems: 'center', gap: '.75rem', cursor: form.featured ? 'default' : 'pointer' }}>
+          <input
+            type="checkbox" name="showOnHomepage" checked={form.showOnHomepage}
+            disabled={form.featured} onChange={set}
+          />
+          <span style={{ fontSize: '.875rem', color: form.featured ? '#6b6880' : '#e8e6f0' }}>
+            Show on homepage
+          </span>
+        </label>
+        <p style={{ fontSize: '.75rem', color: '#6b6880', marginTop: '.5rem' }}>
+          {form.featured
+            ? 'Locked on — the sticky project always shows on the homepage.'
+            : 'Up to 4 projects can show on the homepage at once, including the sticky one.'}
         </p>
       </div>
 

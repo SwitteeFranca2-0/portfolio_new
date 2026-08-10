@@ -40,7 +40,9 @@ model Project {
   imageUrl    String?
   liveUrl     String?
   repoUrl     String?
-  featured    Boolean            @default(false)
+  featured       Boolean         @default(false)
+  hidden         Boolean         @default(false)
+  showOnHomepage Boolean         @default(false)
   order       Int                @default(0)
   stack       ProjectStack[]
   features    ProjectFeature[]

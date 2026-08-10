@@ -7,14 +7,16 @@ import Chip from '@/components/ui/Chip'
 type Project = {
   id: number; slug: string; title: string; type: string; year: number
   description: string; outcome?: string; imageUrl?: string; liveUrl?: string
-  featured: boolean; order: number; stack: string[]
+  featured: boolean; showOnHomepage: boolean; order: number; stack: string[]
 }
 
 export default function Projects({ projects }: { projects: Project[] }) {
   // One sticky project (featured: true) gets the big display — only one allowed.
-  // The 3 most-ordered non-featured projects fill the grid below (4 total on landing).
-  const featured = projects.find((p) => p.featured)
-  const grid = projects.filter((p) => !p.featured).slice(0, 3)
+  // Admin picks which projects show on the homepage (showOnHomepage), up to 4
+  // total including the sticky one.
+  const onHomepage = projects.filter((p) => p.showOnHomepage)
+  const featured = onHomepage.find((p) => p.featured)
+  const grid = onHomepage.filter((p) => !p.featured).slice(0, 3)
 
   return (
     <section id="projects" className={styles.section}>

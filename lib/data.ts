@@ -139,6 +139,7 @@ export type Project = {
   liveUrl?: string
   repoUrl?: string
   featured: boolean
+  showOnHomepage: boolean
   order: number
   stack: string[]
   features?: string[]
@@ -150,7 +151,7 @@ export const projects: Project[] = [
   {
     id: 1, slug: 'saas-dashboard', title: 'SaaS Analytics Dashboard',
     type: 'Fullstack · Client', category: 'software', year: 2024,
-    featured: true, order: 0,
+    featured: true, showOnHomepage: true, order: 0,
     description: 'A multi-tenant analytics dashboard with real-time data visualisation, role-based access, and automated reporting for a B2B SaaS client.',
     body: 'Built end-to-end for a SaaS company needing visibility into user behaviour across their product. Features a live metrics feed, customisable chart widgets, CSV/PDF export, and a white-label mode for enterprise customers. Role-based access lets admins, analysts, and viewers each see tailored views of the same data.',
     outcome: 'Deployed to 120+ enterprise clients. Reduced manual reporting time by 80%.',
@@ -173,7 +174,7 @@ export const projects: Project[] = [
   {
     id: 2, slug: 'rest-api-boilerplate', title: 'REST API Boilerplate',
     type: 'Backend · Open Source', category: 'software', year: 2024,
-    featured: false, order: 1,
+    featured: false, showOnHomepage: true, order: 1,
     description: 'A production-ready Node.js REST API starter with JWT auth, role-based permissions, rate limiting, and full test coverage.',
     body: 'A batteries-included API boilerplate designed to eliminate the repetitive setup work on every new project. Ships with user auth, refresh tokens, email verification, role guards, request validation, structured logging, and a full Jest test suite. Used as the starting point for client projects.',
     repoUrl: '#',
@@ -193,7 +194,7 @@ export const projects: Project[] = [
   {
     id: 3, slug: 'ecommerce-platform', title: 'E-Commerce Platform',
     type: 'Fullstack · Client', category: 'software', year: 2023,
-    featured: false, order: 2,
+    featured: false, showOnHomepage: true, order: 2,
     description: 'Custom e-commerce storefront with product management, cart, Stripe checkout, and order tracking — built for a fashion brand.',
     body: 'A fully custom storefront replacing an off-the-shelf solution that had become too limiting. Built with Next.js for performance, Stripe for payments, and a headless CMS for product management. The client manages everything — inventory, discounts, shipping — from a purpose-built admin panel.',
     stack: ['Next.js', 'Stripe', 'Sanity CMS', 'Tailwind'],
@@ -212,7 +213,7 @@ export const projects: Project[] = [
   {
     id: 4, slug: 'crm-sync-automation', title: 'CRM Sync Pipeline',
     type: 'Automation · Client', category: 'automation', year: 2024,
-    featured: false, order: 3,
+    featured: false, showOnHomepage: true, order: 3,
     description: 'n8n workflow that syncs leads from multiple sources into a central CRM, deduplicates records, and triggers personalised follow-up sequences.',
     body: 'A client was managing leads across five different tools with no single source of truth. This automation watches for new submissions across all channels, deduplicates by email, enriches with company data, pushes to HubSpot, and triggers a personalised email sequence based on the lead source.',
     outcome: 'Eliminated 6hrs/week of manual CRM work. Lead response time dropped from 4hrs to 12mins.',

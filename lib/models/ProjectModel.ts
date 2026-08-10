@@ -1,5 +1,7 @@
 import { BaseModel } from './BaseModel'
 
+export class ProjectValidationError extends Error {}
+
 const PROJECT_INCLUDE = {
   stack:    { orderBy: { order: 'asc' as const } },
   features: { orderBy: { order: 'asc' as const } },
@@ -35,8 +37,10 @@ export class ProjectModel extends BaseModel {
       imageUrl:    p.imageUrl    ?? undefined,
       liveUrl:     p.liveUrl     ?? undefined,
       repoUrl:     p.repoUrl     ?? undefined,
-      featured:    p.featured,
-      order:       p.order,
+      featured:       p.featured,
+      hidden:         p.hidden,
+      showOnHomepage: p.showOnHomepage,
+      order:          p.order,
       stack:       p.stack.map(s => s.name),
       features:    p.features.map(f => f.text),
       media:       p.media.map(m => ({
@@ -55,8 +59,13 @@ export class ProjectModel extends BaseModel {
     }
   }
 
-  static async findAll() {
-    const rows = await this.db.project.findMany({ orderBy: { order: 'asc' }, include: PROJECT_INCLUDE })
+  // By default, hidden projects are excluded — pass includeHidden for admin views.
+  static async findAll(opts: { includeHidden?: boolean } = {}) {
+    const rows = await this.db.project.findMany({
+      where:   opts.includeHidden ? {} : { hidden: false },
+      orderBy: { order: 'asc' },
+      include: PROJECT_INCLUDE,
+    })
     return rows.map(p => this.shape(p))
   }
 
@@ -70,9 +79,11 @@ export class ProjectModel extends BaseModel {
     return p ? this.shape(p) : null
   }
 
-  static async findBySlug(slug: string) {
+  // Hidden projects 404 for public visitors — pass includeHidden for admin views.
+  static async findBySlug(slug: string, opts: { includeHidden?: boolean } = {}) {
     const p = await this.db.project.findUnique({ where: { slug }, include: PROJECT_INCLUDE })
-    return p ? this.shape(p) : null
+    if (!p || (p.hidden && !opts.includeHidden)) return null
+    return this.shape(p)
   }
 
   static async findFeatured() {
@@ -119,14 +130,36 @@ export class ProjectModel extends BaseModel {
     })
   }
 
+  static readonly MAX_HOMEPAGE = 4
+
   static async update(id: number, data: {
     title?: string; slug?: string; type?: string; categoryId?: string; year?: number
     description?: string; body?: string; outcome?: string; imageUrl?: string
-    liveUrl?: string; repoUrl?: string; featured?: boolean; order?: number
+    liveUrl?: string; repoUrl?: string; featured?: boolean; hidden?: boolean
+    showOnHomepage?: boolean; order?: number
     stack?: string[]; features?: string[]
     media?: { type: string; url: string; caption?: string }[]
   }) {
-    const { stack, features, media, featured, ...rest } = data
+    const { stack, features, media, featured, showOnHomepage: requestedShowOnHomepage, ...rest } = data
+    let showOnHomepage = requestedShowOnHomepage
+
+    const current = await this.db.project.findUniqueOrThrow({
+      where: { id },
+      select: { featured: true, showOnHomepage: true },
+    })
+    const effectiveFeatured = featured ?? current.featured
+    if (showOnHomepage === undefined) showOnHomepage = current.showOnHomepage
+    // The sticky project always shows on the homepage — locked, can't be unchecked.
+    if (effectiveFeatured) showOnHomepage = true
+
+    if (showOnHomepage && !current.showOnHomepage) {
+      const otherCount = await this.db.project.count({
+        where: { showOnHomepage: true, id: { not: id } },
+      })
+      if (otherCount >= this.MAX_HOMEPAGE) {
+        throw new ProjectValidationError(`Only ${this.MAX_HOMEPAGE} projects can show on the homepage — uncheck one first.`)
+      }
+    }
 
     if (featured) {
       await this.db.project.updateMany({ data: { featured: false } })
@@ -151,6 +184,7 @@ export class ProjectModel extends BaseModel {
         liveUrl:  rest.liveUrl  !== undefined ? rest.liveUrl  || null : undefined,
         repoUrl:  rest.repoUrl  !== undefined ? rest.repoUrl  || null : undefined,
         featured,
+        showOnHomepage,
         ...(stack    ? { stack:    { create: stack.map((name, i)    => ({ name, order: i })) } } : {}),
         ...(features ? { features: { create: features.map((text, i) => ({ text, order: i })) } } : {}),
         ...(media    ? { media:    { create: media.map((m, i)       => ({ type: m.type, url: m.url, caption: m.caption || null, order: i })) } } : {}),

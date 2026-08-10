@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 import { SignJWT } from 'jose'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+import { getS3Client, getS3Bucket } from '@/lib/s3'
 
 // ── Storage mode detection ────────────────────────────────────────────────────
 // IS_S3_ENDPOINT=true  → standard S3 (AWS, R2, MinIO, Spaces, Backblaze…)
@@ -50,41 +51,25 @@ async function uploadLocal(buffer: Buffer, filename: string) {
 // ── Standard S3 (AWS / Cloudflare R2 / MinIO / DigitalOcean Spaces / etc.) ───
 // Required env vars: S3_ENDPOINT, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, BUCKET_NAME
 // Optional: REGION (defaults to us-east-1)
-
-function getS3Client() {
-  const endpoint  = process.env.S3_ENDPOINT
-  const accessKey = process.env.AWS_ACCESS_KEY_ID
-  const secretKey = process.env.AWS_SECRET_ACCESS_KEY
-
-  if (!endpoint || !accessKey || !secretKey) {
-    throw new Error('S3 not configured — set S3_ENDPOINT, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY')
-  }
-
-  return new S3Client({
-    endpoint,
-    region:      process.env.REGION ?? 'us-east-1',
-    credentials: { accessKeyId: accessKey, secretAccessKey: secretKey },
-    forcePathStyle: true,   // required for MinIO and most non-AWS providers
-  })
-}
+//
+// The bucket is not assumed to be publicly readable — uploaded objects are
+// served back through /api/images/[...key], which streams them from S3
+// using these same credentials.
 
 async function uploadS3(buffer: Buffer, key: string, contentType: string) {
-  const bucketName = process.env.BUCKET_NAME
-  if (!bucketName) {
-    return NextResponse.json({ error: 'BUCKET_NAME not set' }, { status: 500 })
+  try {
+    const client = getS3Client()
+    await client.send(new PutObjectCommand({
+      Bucket:      getS3Bucket(),
+      Key:         key,
+      Body:        buffer,
+      ContentType: contentType,
+    }))
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'S3 upload failed' }, { status: 500 })
   }
 
-  const client = getS3Client()
-  await client.send(new PutObjectCommand({
-    Bucket:      bucketName,
-    Key:         key,
-    Body:        buffer,
-    ContentType: contentType,
-  }))
-
-  const endpoint  = process.env.S3_ENDPOINT!.replace(/\/$/, '')
-  const publicUrl = `${endpoint}/${bucketName}/${key}`
-  return NextResponse.json({ url: publicUrl })
+  return NextResponse.json({ url: `/api/images/${key}` })
 }
 
 // ── Supabase Storage (self-hosted, JWT-signed) ────────────────────────────────

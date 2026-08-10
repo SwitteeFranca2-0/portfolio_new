@@ -197,6 +197,35 @@
 }
 .card:hover .cardArrow { opacity: 1; transform: translateX(0); }
 
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.pageBtn {
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem;
+  letter-spacing: .08em;
+  color: var(--mid);
+  background: none;
+  border: 1px solid var(--rule);
+  padding: .55rem .9rem;
+  cursor: pointer;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.pageBtn:hover:not(:disabled) { color: var(--fg); border-color: rgba(62,207,207,.3); }
+.pageBtn:disabled { opacity: .35; cursor: default; }
+.pageBtnActive {
+  color: var(--acc3);
+  border-color: rgba(62,207,207,.4);
+  background: rgba(62,207,207,.08);
+}
+
 /* Empty state */
 .empty {
   padding: 5rem 0;

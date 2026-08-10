@@ -2,6 +2,7 @@ import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from './generated/prisma/client'
 
+const DB_SCHEMA = process.env.DB_SCHEMA || 'portfolio'
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
 function createPrismaClient() {
@@ -9,7 +10,7 @@ function createPrismaClient() {
     connectionString: process.env.DATABASE_URL,
     ssl: false,
   })
-  const adapter = new PrismaPg(pool, { schema: 'portfolio' })
+  const adapter = new PrismaPg(pool, { schema: DB_SCHEMA })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return new PrismaClient({ adapter } as any)
 }
