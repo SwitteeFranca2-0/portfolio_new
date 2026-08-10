@@ -55,6 +55,13 @@ export default function SettingsForm({ currentEmail }: { currentEmail: string })
       body: JSON.stringify({ password: emailForm.password, newEmail: emailForm.newEmail }),
     })
     if (res.ok) {
+      const data = await res.json().catch(() => null)
+      if (data?.unchanged) {
+        // Email didn't actually change — no need to force a re-login.
+        setEmailStatus('saved')
+        setTimeout(() => setEmailStatus('idle'), 3000)
+        return
+      }
       // The current session JWT still carries the old email — force a fresh
       // sign-in so the next session reflects the change.
       await signOut({ callbackUrl: '/admin/login' })
@@ -103,6 +110,7 @@ export default function SettingsForm({ currentEmail }: { currentEmail: string })
       </div>
       <div className="ar-card">
         <div className="ar-card-t">Change Email</div>
+        {emailStatus === 'saved' && <div className="ar-ok">Email unchanged</div>}
         {emailStatus === 'error' && <div className="ar-er">{emailError || 'Save failed'}</div>}
         <form onSubmit={handleEmailSubmit}>
           <div className="ar-field">

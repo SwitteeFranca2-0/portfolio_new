@@ -47,7 +47,7 @@ npm install
 cp .env.example .env
 ```
 
-Fill in `.env`. At minimum you need `DATABASE_URL` and `ADMIN_JWT_SECRET`. See `.env.example` for the full reference.
+Fill in `.env`. At minimum you need `DATABASE_URL` and `NEXTAUTH_SECRET`. See `.env.example` for the full reference.
 
 ### 3. Set up the database
 
@@ -56,33 +56,14 @@ npx prisma db push        # create all tables
 npx tsx prisma/seed.ts    # seed with starter content
 ```
 
-`seed.ts` only populates portfolio content (bio, projects, skills, etc.) — it does **not** create a login. Your admin account is separate; create it in the next step.
+`seed.ts` populates portfolio content (bio, projects, skills, etc.) **and** creates a default admin login via an `AdminUser` upsert:
 
-### 4. Create your admin account
+- Email: `temp@email.com`
+- Password: `ChangeMe124`
 
-```bash
-npx tsx -e "
-import 'dotenv/config'
-import { Pool } from 'pg'
-import bcrypt from 'bcryptjs'
-import { randomUUID } from 'crypto'
+Log in with those credentials, then go straight to `/admin/settings` and change both the password and email — there is no "forgot password" recovery flow in this app, so don't lose whatever you set.
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: false })
-const hash = bcrypt.hashSync('YourPasswordHere', 10)
-const now  = new Date().toISOString()
-await pool.query(
-  \`INSERT INTO auth.users
-    (instance_id,id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)
-   VALUES (\\\$1,\\\$2,\\\$3,\\\$4,\\\$5,\\\$6,\\\$7,\\\$8,\\\$9,\\\$10,\\\$10)\`,
-  ['00000000-0000-0000-0000-000000000000', randomUUID(), 'authenticated', 'authenticated',
-   'you@email.com', hash, now, JSON.stringify({provider:'email',providers:['email']}), '{}', now]
-)
-await pool.end()
-console.log('Admin account created')
-"
-```
-
-### 5. Run
+### 4. Run
 
 ```bash
 npm run dev
@@ -153,8 +134,8 @@ components/
 lib/
 ├── models/          ← OOP model layer (BaseModel → BioModel, ProjectModel, etc.)
 ├── data.ts          ← demo placeholder data (shown in demo mode)
-├── auth.ts          ← JWT sign/verify
-├── auth-edge.ts     ← Edge-runtime JWT verify (used by proxy.ts)
+├── auth.ts          ← NextAuth setup — Credentials provider, session/JWT callbacks
+├── auth.config.ts   ← Edge-safe NextAuth config (used by proxy.ts)
 ├── s3.ts            ← shared S3 client/bucket helpers
 └── prisma.ts        ← Prisma client singleton
 

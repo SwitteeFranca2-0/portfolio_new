@@ -4,11 +4,20 @@ import type { NextAuthConfig } from 'next-auth'
 // which runs in the Edge runtime). The Credentials provider itself (which
 // needs Node-only deps) is added on top of this in lib/auth.ts.
 export const authConfig: NextAuthConfig = {
+  // Railway (our deployment target) sets none of AUTH_URL, AUTH_TRUST_HOST,
+  // VERCEL, or CF_PAGES, so NextAuth's production default of trustHost:
+  // false would reject every /api/auth/* request with UntrustedHost. This
+  // config is spread into both the Edge (proxy.ts) and full (lib/auth.ts)
+  // NextAuth instances, so setting it here covers both.
+  trustHost: true,
   pages: {
     signIn: '/admin/login',
   },
   session: {
     strategy: 'jwt',
+    // Restores the 7-day session lifetime of the old JWT scheme (NextAuth
+    // defaults to 30 days when maxAge is omitted).
+    maxAge: 60 * 60 * 24 * 7,
   },
   providers: [],
   callbacks: {

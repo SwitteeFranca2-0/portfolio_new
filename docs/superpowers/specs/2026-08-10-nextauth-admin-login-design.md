@@ -78,8 +78,10 @@ forms:
    /api/admin/settings/email` re-verifies the current password the same way
    before updating `AdminUser.email`.
 
-Both routes require an active NextAuth session (same `/admin/:path*` proxy
-protection) and return an inline success/error message on the form.
+Both routes self-guard with `const session = await auth()` at the top of the
+handler (the `/admin/:path*` proxy matcher does not cover `/api/*` routes) —
+an unauthenticated request returns 401 before any database access. Both
+return an inline success/error message on the form.
 
 Since NextAuth JWTs carry the email captured at sign-in, a successful email
 change leaves the current session token showing the old email until the

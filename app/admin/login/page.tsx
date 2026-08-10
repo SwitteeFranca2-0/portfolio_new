@@ -47,13 +47,18 @@ export default function AdminLoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    const result = await signIn('credentials', { email, password, redirect: false })
-    if (result?.error) {
-      setError('Invalid email or password')
-      setLoading(false)
-    } else {
+    try {
+      const result = await signIn('credentials', { email, password, redirect: false })
+      if (!result?.ok) {
+        setError('Invalid email or password')
+        setLoading(false)
+        return
+      }
       router.push('/admin')
       router.refresh()
+    } catch {
+      setError('Could not reach the server. Please try again.')
+      setLoading(false)
     }
   }
 
