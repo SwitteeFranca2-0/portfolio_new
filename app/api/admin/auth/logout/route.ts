@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { cookieOptions } from '@/lib/auth'
+import { cookieOptions } from '@/lib/auth-legacy'
 
 export async function POST() {
   const res = NextResponse.json({ ok: true })
