@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import bcrypt from 'bcryptjs'
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '../lib/generated/prisma/client'
@@ -63,6 +64,15 @@ async function main() {
     },
   })
   console.log('✓ Contact')
+
+  // ── Admin User (default login — change via /admin/settings) ────────────────
+  const defaultAdminPassword = await bcrypt.hash('ChangeMe124', 10)
+  await prisma.adminUser.upsert({
+    where: { email: 'temp@email.com' },
+    update: {},
+    create: { email: 'temp@email.com', password: defaultAdminPassword },
+  })
+  console.log('✓ Admin user (temp@email.com / ChangeMe124 — change this after first login)')
 
   // ── Skills ────────────────────────────────────────────────────────────────
   const skillsData = [
