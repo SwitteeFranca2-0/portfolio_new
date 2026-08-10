@@ -16,8 +16,6 @@
     "@aws-sdk/client-s3": "^3.1067.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
-    "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.107.0",
     "@tiptap/extension-link": "^3.26.1",
     "@tiptap/extension-placeholder": "^3.26.1",
     "@tiptap/extension-underline": "^3.26.1",
