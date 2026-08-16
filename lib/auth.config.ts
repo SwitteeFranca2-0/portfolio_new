@@ -10,6 +10,9 @@ export const authConfig: NextAuthConfig = {
   // config is spread into both the Edge (proxy.ts) and full (lib/auth.ts)
   // NextAuth instances, so setting it here covers both.
   trustHost: true,
+  // NextAuth v5 only auto-detects AUTH_SECRET. Fall back to NEXTAUTH_SECRET
+  // (the v4 name, still used in our docs/Railway config) so either works.
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/admin/login',
   },
