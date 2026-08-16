@@ -58,8 +58,24 @@
 
 .chips { display: flex; flex-wrap: wrap; gap: .4rem; }
 
+.viewAll {
+  margin-top: 2.5rem;
+  text-align: right;
+}
+.viewAllLink {
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  text-decoration: none;
+  transition: color .2s;
+}
+.viewAllLink:hover { color: var(--acc3); }
+
 @media (max-width: 900px) {
   .grid { grid-template-columns: 1fr; }
+  .viewAll { text-align: center; }
 }
 
 @media (max-width: 640px) {

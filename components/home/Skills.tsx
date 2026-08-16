@@ -1,5 +1,6 @@
 'use client'
 import { useEffect } from 'react'
+import Link from 'next/link'
 import styles from './Skills.module.css'
 import SectionHeader from '@/components/ui/SectionHeader'
 import Chip from '@/components/ui/Chip'
@@ -11,6 +12,8 @@ type Skill = {
 }
 
 export default function Skills({ skills }: { skills: Skill[] }) {
+  const visible = skills.slice(0, 6)
+
   useEffect(() => {
     const cards = document.querySelectorAll<HTMLElement>(`.${styles.card}`)
     cards.forEach((card) => {
@@ -34,7 +37,7 @@ export default function Skills({ skills }: { skills: Skill[] }) {
     <section id="skills" className={styles.section}>
       <SectionHeader eyebrow="01 — What I Do" title={'TECHNICAL\nSKILLS'} />
       <div className={styles.grid}>
-        {skills.map((skill) => (
+        {visible.map((skill) => (
           <div key={skill.id} className={`${styles.card} reveal`}>
             <span className={styles.num}>0{skill.id}</span>
             <div className={styles.icon}>{skill.icon}</div>
@@ -47,6 +50,12 @@ export default function Skills({ skills }: { skills: Skill[] }) {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className={styles.viewAll}>
+        <Link href="/skills" className={styles.viewAllLink}>
+          View more skills ↗
+        </Link>
       </div>
     </section>
   )
