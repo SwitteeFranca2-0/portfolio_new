@@ -13,6 +13,12 @@ export const authConfig: NextAuthConfig = {
   // NextAuth v5 only auto-detects AUTH_SECRET. Fall back to NEXTAUTH_SECRET
   // (the v4 name, still used in our docs/Railway config) so either works.
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  // Force the secure (__Secure-prefixed) cookie in production instead of
+  // relying on protocol auto-detection from forwarded headers, which can
+  // disagree between the Edge middleware and the Node API route behind
+  // Railway's proxy — a mismatch here silently drops the session cookie
+  // and looks like "sign-in succeeds but never redirects to the dashboard".
+  useSecureCookies: process.env.NODE_ENV === 'production',
   pages: {
     signIn: '/admin/login',
   },
