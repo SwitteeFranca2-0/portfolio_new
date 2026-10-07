@@ -32,6 +32,11 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl
+      // Admin API routes answer with a 401 rather than a login redirect —
+      // fetch() would follow the redirect and report the login page as a 200
+      if (pathname.startsWith('/api/admin')) {
+        return auth?.user ? true : Response.json({ error: 'Not authenticated' }, { status: 401 })
+      }
       const isAdminRoute = pathname.startsWith('/admin') && pathname !== '/admin/login'
       if (!isAdminRoute) return true
       return !!auth?.user
