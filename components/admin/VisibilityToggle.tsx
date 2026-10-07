@@ -2,7 +2,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-type Props = { id: number; hidden: boolean }
+// endpoint is the item's admin API URL, e.g. /api/admin/projects/3
+type Props = { endpoint: string; hidden: boolean }
 
 const eyeOpen = (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -19,14 +20,14 @@ const eyeOff = (
   </svg>
 )
 
-export default function VisibilityToggle({ id, hidden }: Props) {
+export default function VisibilityToggle({ endpoint, hidden }: Props) {
   const [busy, setBusy] = useState(false)
   const router = useRouter()
 
   async function toggle() {
     setBusy(true)
     try {
-      await fetch(`/api/admin/projects/${id}`, {
+      await fetch(endpoint, {
         method:  'PUT',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ hidden: !hidden }),

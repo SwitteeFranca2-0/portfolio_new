@@ -1,6 +1,6 @@
 import { ProjectModel } from '@/lib/models/ProjectModel'
 import Link from 'next/link'
-import VisibilityToggle from './VisibilityToggle'
+import VisibilityToggle from '@/components/admin/VisibilityToggle'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,7 +42,7 @@ export default async function AdminProjectsPage() {
                 <td style={{ fontFamily: "'DM Mono', monospace", fontSize: '.7rem', color: '#6b6880' }}>{p.year}</td>
                 <td style={{ fontSize: '.72rem', color: '#6b6880' }}>{p.stack.join(', ')}</td>
                 <td>{p.featured && <span className="ar-badge ar-ba-t">Sticky</span>}</td>
-                <td><VisibilityToggle id={p.id} hidden={p.hidden} /></td>
+                <td><VisibilityToggle endpoint={`/api/admin/projects/${p.id}`} hidden={p.hidden} /></td>
                 <td>
                   <Link href={`/admin/projects/${p.id}`} style={{ color: '#3ECFCF', fontSize: '.72rem', textDecoration: 'none' }}>Edit →</Link>
                 </td>

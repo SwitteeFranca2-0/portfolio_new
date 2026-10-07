@@ -1,10 +1,11 @@
 import { ExperienceModel } from '@/lib/models/ExperienceModel'
 import Link from 'next/link'
+import VisibilityToggle from '@/components/admin/VisibilityToggle'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminExperiencePage() {
-  const experiences = await ExperienceModel.findAll()
+  const experiences = await ExperienceModel.findAll({ includeHidden: true })
 
   return (
     <div>
@@ -13,6 +14,9 @@ export default async function AdminExperiencePage() {
           <div className="ar-title">Experience</div>
           <div className="ar-sub">Full work history — up to 3 entries can also show on the homepage</div>
         </div>
+        <Link href="/admin/experience/new">
+          <button className="ar-btn ar-btn-p">+ New Experience</button>
+        </Link>
       </div>
 
       <div className="ar-card">
@@ -27,6 +31,7 @@ export default async function AdminExperiencePage() {
                 <th>Period</th>
                 <th>Tags</th>
                 <th>Homepage</th>
+                <th>Visible</th>
                 <th></th>
               </tr>
             </thead>
@@ -42,6 +47,7 @@ export default async function AdminExperiencePage() {
                     {exp.tags.map(t => t.name).join(', ')}
                   </td>
                   <td>{exp.showOnHomepage && <span className="ar-badge ar-ba-t">Homepage</span>}</td>
+                  <td><VisibilityToggle endpoint={`/api/admin/experience/${exp.id}`} hidden={exp.hidden} /></td>
                   <td>
                     <Link
                       href={`/admin/experience/${exp.id}`}

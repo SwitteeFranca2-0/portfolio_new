@@ -1,10 +1,17 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type SkillItem = { id?: number; name: string; highlight: boolean; showInHero: boolean; order: number }
 type Skill = { id: number; icon: string; title: string; description: string; proficiency: string; yearsExp?: number | null; items: SkillItem[] }
 
-export default function SkillForm({ skill }: { skill: Skill }) {
+const EMPTY_SKILL: Skill = { id: 0, icon: '', title: '', description: '', proficiency: 'proficient', yearsExp: null, items: [] }
+
+// Without a skill prop the form creates a new one, then moves to its edit page
+export default function SkillForm({ skill = EMPTY_SKILL }: { skill?: Skill }) {
+  const router = useRouter()
+  const isNew = skill.id === 0
+  const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [form, setForm] = useState({
     icon:        skill.icon,
     title:       skill.title,
@@ -30,12 +37,15 @@ export default function SkillForm({ skill }: { skill: Skill }) {
     e.preventDefault()
     setStatus('saving')
     setErrorMsg('')
-    const res = await fetch(`/api/admin/skills/${skill.id}`, {
-      method: 'PUT',
+    const res = await fetch(isNew ? '/api/admin/skills' : `/api/admin/skills/${skill.id}`, {
+      method: isNew ? 'POST' : 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...form, yearsExp: form.yearsExp ? Number(form.yearsExp) : null, items }),
     })
-    if (res.ok) {
+    if (res.ok && isNew) {
+      const created = await res.json()
+      router.push(`/admin/skills/${created.id}`)
+    } else if (res.ok) {
       setStatus('saved')
       setTimeout(() => setStatus('idle'), 3000)
     } else {
@@ -43,6 +53,19 @@ export default function SkillForm({ skill }: { skill: Skill }) {
       setErrorMsg(data?.error ?? 'Save failed')
       setStatus('error')
       setTimeout(() => { setStatus('idle'); setErrorMsg('') }, 6000)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!deleteConfirm) { setDeleteConfirm(true); return }
+    const res = await fetch(`/api/admin/skills/${skill.id}`, { method: 'DELETE' })
+    if (res.ok) {
+      router.push('/admin/skills')
+      router.refresh()
+    } else {
+      setDeleteConfirm(false)
+      setErrorMsg('Delete failed')
+      setStatus('error')
     }
   }
 
@@ -128,9 +151,21 @@ export default function SkillForm({ skill }: { skill: Skill }) {
         </p>
       </div>
 
-      <button type="submit" className="ar-btn ar-btn-p" disabled={status === 'saving'}>
-        {status === 'saving' ? 'Saving...' : 'Save Skill'}
-      </button>
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <button type="submit" className="ar-btn ar-btn-p" disabled={status === 'saving'}>
+          {status === 'saving' ? 'Saving...' : isNew ? 'Create Skill' : 'Save Skill'}
+        </button>
+        {!isNew && (
+          <button type="button" className="ar-btn ar-btn-d" onClick={handleDelete}>
+            {deleteConfirm ? 'Confirm Delete' : 'Delete'}
+          </button>
+        )}
+        {deleteConfirm && (
+          <button type="button" className="ar-btn ar-btn-o" onClick={() => setDeleteConfirm(false)}>
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   )
 }

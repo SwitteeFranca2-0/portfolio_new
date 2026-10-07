@@ -1,5 +1,6 @@
 import { SkillModel } from '@/lib/models/SkillModel'
 import Link from 'next/link'
+import VisibilityToggle from '@/components/admin/VisibilityToggle'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +20,7 @@ const proficiencyBadge: Record<string, string> = {
 }
 
 export default async function AdminSkillsPage() {
-  const skills = await SkillModel.findAll()
+  const skills = await SkillModel.findAll({ includeHidden: true })
 
   const expertCount     = skills.filter(s => s.proficiency === 'expert').length
   const proficientCount = skills.filter(s => s.proficiency === 'proficient').length
@@ -33,6 +34,9 @@ export default async function AdminSkillsPage() {
           <div className="ar-title">SKILLS</div>
           <div className="ar-sub">Technical skill categories and individual technologies</div>
         </div>
+        <Link href="/admin/skills/new">
+          <button className="ar-btn ar-btn-p">+ New Skill</button>
+        </Link>
       </div>
 
       <div className="ar-stats">
@@ -62,6 +66,7 @@ export default async function AdminSkillsPage() {
               <th>Proficiency</th>
               <th>Highlighted Technologies</th>
               <th>Items</th>
+              <th>Visible</th>
               <th></th>
             </tr>
           </thead>
@@ -102,6 +107,7 @@ export default async function AdminSkillsPage() {
                       {skill.items.length}
                     </span>
                   </td>
+                  <td><VisibilityToggle endpoint={`/api/admin/skills/${skill.id}`} hidden={skill.hidden} /></td>
                   <td style={{ textAlign: 'right' }}>
                     <Link
                       href={`/admin/skills/${skill.id}`}

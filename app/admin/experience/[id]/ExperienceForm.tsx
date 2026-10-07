@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 
 type Experience = {
@@ -7,7 +8,16 @@ type Experience = {
   description: string; showOnHomepage: boolean; order: number; tags: { name: string }[]
 }
 
-export default function ExperienceForm({ experience }: { experience: Experience }) {
+const EMPTY_EXPERIENCE: Experience = {
+  id: 0, company: '', role: '', startDate: '', endDate: null,
+  description: '', showOnHomepage: false, order: 0, tags: [],
+}
+
+// Without an experience prop the form creates a new entry, then moves to its edit page
+export default function ExperienceForm({ experience = EMPTY_EXPERIENCE }: { experience?: Experience }) {
+  const router = useRouter()
+  const isNew = experience.id === 0
+  const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [form, setForm] = useState({
     company:        experience.company,
     role:           experience.role,
@@ -30,8 +40,8 @@ export default function ExperienceForm({ experience }: { experience: Experience 
     e.preventDefault()
     setStatus('saving')
     setErrorMsg('')
-    const res = await fetch(`/api/admin/experience/${experience.id}`, {
-      method: 'PUT',
+    const res = await fetch(isNew ? '/api/admin/experience' : `/api/admin/experience/${experience.id}`, {
+      method: isNew ? 'POST' : 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...form,
@@ -40,7 +50,10 @@ export default function ExperienceForm({ experience }: { experience: Experience 
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
       }),
     })
-    if (res.ok) {
+    if (res.ok && isNew) {
+      const created = await res.json()
+      router.push(`/admin/experience/${created.id}`)
+    } else if (res.ok) {
       setStatus('saved')
       setTimeout(() => setStatus('idle'), 3000)
     } else {
@@ -48,6 +61,19 @@ export default function ExperienceForm({ experience }: { experience: Experience 
       setErrorMsg(data?.error ?? 'Save failed')
       setStatus('error')
       setTimeout(() => { setStatus('idle'); setErrorMsg('') }, 6000)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!deleteConfirm) { setDeleteConfirm(true); return }
+    const res = await fetch(`/api/admin/experience/${experience.id}`, { method: 'DELETE' })
+    if (res.ok) {
+      router.push('/admin/experience')
+      router.refresh()
+    } else {
+      setDeleteConfirm(false)
+      setErrorMsg('Delete failed')
+      setStatus('error')
     }
   }
 
@@ -105,9 +131,21 @@ export default function ExperienceForm({ experience }: { experience: Experience 
         </p>
       </div>
 
-      <button type="submit" className="ar-btn ar-btn-p" disabled={status === 'saving'}>
-        {status === 'saving' ? 'Saving...' : 'Save Experience'}
-      </button>
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <button type="submit" className="ar-btn ar-btn-p" disabled={status === 'saving'}>
+          {status === 'saving' ? 'Saving...' : isNew ? 'Create Experience' : 'Save Experience'}
+        </button>
+        {!isNew && (
+          <button type="button" className="ar-btn ar-btn-d" onClick={handleDelete}>
+            {deleteConfirm ? 'Confirm Delete' : 'Delete'}
+          </button>
+        )}
+        {deleteConfirm && (
+          <button type="button" className="ar-btn ar-btn-o" onClick={() => setDeleteConfirm(false)}>
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   )
 }

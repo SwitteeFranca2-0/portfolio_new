@@ -121,6 +121,7 @@ model Skill {
   description String
   proficiency String
   yearsExp    Int?
+  hidden      Boolean     @default(false)
   order       Int         @default(0)
   items       SkillItem[]
 }
@@ -145,6 +146,7 @@ model Experience {
   endDate        String?
   description    String
   showOnHomepage Boolean         @default(false)
+  hidden         Boolean         @default(false)
   order          Int             @default(0)
   tags           ExperienceTag[]
 }
