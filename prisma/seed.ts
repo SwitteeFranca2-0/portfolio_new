@@ -147,14 +147,19 @@ async function main() {
     },
   ]
 
-  for (const s of skillsData) {
-    const { items, ...skill } = s
-    const created = await prisma.skill.create({ data: skill })
-    await prisma.skillItem.createMany({
-      data: items.map(i => ({ ...i, skillId: created.id })),
-    })
+  // Only seed into an empty table — re-running the seed used to duplicate every group
+  if (await prisma.skill.count() > 0) {
+    console.log('⏭  Skills already present — skipping')
+  } else {
+    for (const s of skillsData) {
+      const { items, ...skill } = s
+      const created = await prisma.skill.create({ data: skill })
+      await prisma.skillItem.createMany({
+        data: items.map(i => ({ ...i, skillId: created.id })),
+      })
+    }
+    console.log('✓ Skills')
   }
-  console.log('✓ Skills')
 
   // ── Experience ────────────────────────────────────────────────────────────
   const expData = [
@@ -172,14 +177,18 @@ async function main() {
     },
   ]
 
-  for (const e of expData) {
-    const { tags, ...exp } = e
-    const created = await prisma.experience.create({ data: exp })
-    await prisma.experienceTag.createMany({
-      data: tags.map(name => ({ name, experienceId: created.id })),
-    })
+  if (await prisma.experience.count() > 0) {
+    console.log('⏭  Experience already present — skipping')
+  } else {
+    for (const e of expData) {
+      const { tags, ...exp } = e
+      const created = await prisma.experience.create({ data: exp })
+      await prisma.experienceTag.createMany({
+        data: tags.map(name => ({ name, experienceId: created.id })),
+      })
+    }
+    console.log('✓ Experience')
   }
-  console.log('✓ Experience')
 
   // ── Projects ──────────────────────────────────────────────────────────────
   const projectsData = [
@@ -335,34 +344,38 @@ async function main() {
     },
   ]
 
-  for (const p of projectsData) {
-    const { stack, features, media, automation, ...projectData } = p
-    const project = await prisma.project.create({ data: projectData })
+  if (await prisma.project.count() > 0) {
+    console.log('⏭  Projects already present — skipping')
+  } else {
+    for (const p of projectsData) {
+      const { stack, features, media, automation, ...projectData } = p
+      const project = await prisma.project.create({ data: projectData })
 
-    await prisma.projectStack.createMany({
-      data: stack.map((name, i) => ({ name, order: i, projectId: project.id })),
-    })
-    if (features?.length) {
-      await prisma.projectFeature.createMany({
-        data: features.map((text, i) => ({ text, order: i, projectId: project.id })),
+      await prisma.projectStack.createMany({
+        data: stack.map((name, i) => ({ name, order: i, projectId: project.id })),
       })
+      if (features?.length) {
+        await prisma.projectFeature.createMany({
+          data: features.map((text, i) => ({ text, order: i, projectId: project.id })),
+        })
+      }
+      if (media?.length) {
+        await prisma.projectMedia.createMany({
+          data: media.map(m => ({ ...m, projectId: project.id })),
+        })
+      }
+      if (automation) {
+        const { integrations, ...autoData } = automation
+        const auto = await prisma.automationDetails.create({
+          data: { ...autoData, projectId: project.id },
+        })
+        await prisma.automationIntegration.createMany({
+          data: integrations.map(name => ({ name, automationId: auto.id })),
+        })
+      }
     }
-    if (media?.length) {
-      await prisma.projectMedia.createMany({
-        data: media.map(m => ({ ...m, projectId: project.id })),
-      })
-    }
-    if (automation) {
-      const { integrations, ...autoData } = automation
-      const auto = await prisma.automationDetails.create({
-        data: { ...autoData, projectId: project.id },
-      })
-      await prisma.automationIntegration.createMany({
-        data: integrations.map(name => ({ name, automationId: auto.id })),
-      })
-    }
+    console.log('✓ Projects')
   }
-  console.log('✓ Projects')
 
   console.log('\n✅ Seed complete — portfolio schema populated!')
 }
