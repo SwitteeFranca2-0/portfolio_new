@@ -186,7 +186,17 @@
   .stat { min-width: 50%; border-bottom: 1px solid var(--rule); }
 }
 @media (max-width: 600px) {
-  .grid { grid-template-columns: 1fr; }
+  /* Keep two columns on phones; compact the cards to fit ~165px width */
+  .grid { gap: .75rem; }
+  .card { padding: 1.1rem 1rem; min-width: 0; }
+  .cardHeader { margin-bottom: .75rem; gap: .5rem; }
+  .icon { font-size: 1.4rem; }
+  .badge { font-size: .48rem; padding: .2rem .45rem; letter-spacing: .06em; }
+  .years { font-size: .52rem; }
+  .cardTitle { font-size: 1.1rem; line-height: 1.1; overflow-wrap: anywhere; }
+  .cardDesc { font-size: .72rem; line-height: 1.55; margin-bottom: 1rem; }
+  .chips { gap: .3rem; }
+  .chip { font-size: .52rem; padding: .22rem .5rem; letter-spacing: .04em; }
   .stat { min-width: 100%; }
   .main { padding: 5rem 1.25rem 3rem; }
 }

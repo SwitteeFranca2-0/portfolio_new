@@ -12,6 +12,7 @@ type Skill = {
 }
 
 export default function Skills({ skills }: { skills: Skill[] }) {
+  // Desktop shows six; CSS trims this to four on phones
   const visible = skills.slice(0, 6)
 
   useEffect(() => {

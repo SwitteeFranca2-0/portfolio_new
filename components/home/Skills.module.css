@@ -74,10 +74,28 @@
 .viewAllLink:hover { color: var(--acc3); }
 
 @media (max-width: 900px) {
-  .grid { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
   .viewAll { text-align: center; }
 }
 
+/* Phones: keep two columns, compact the cards to fit ~165px width */
 @media (max-width: 640px) {
-  .card { padding: 1.5rem; }
+  .grid { gap: .75rem; }
+  /* Show four cards (two even rows) on phones; the rest live on /skills */
+  .card:nth-child(n + 5) { display: none; }
+  .card { padding: 1.1rem 1rem; min-width: 0; }
+  .num { font-size: 2.5rem; top: .4rem; right: .75rem; }
+  .icon { font-size: 1.4rem; margin-bottom: .75rem; }
+  .title { font-size: 1.1rem; line-height: 1.1; overflow-wrap: anywhere; }
+  .desc {
+    font-size: .72rem;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .chips { gap: .3rem; }
+  .chips > span { font-size: .52rem; padding: .22rem .5rem; letter-spacing: .04em; }
 }
